@@ -2805,6 +2805,195 @@
     });
   }
 
+  function restoreHomeLivingSwiperDesktop() {
+    if (isMobileViewport()) return;
+
+    document.querySelectorAll("section.living .living-track > .swiper-controls").forEach(function (controls) {
+      var track = controls.closest(".living-track");
+      var swiperEl = track && track.querySelector(".swiper-living");
+      if (!swiperEl) return;
+
+      if (controls.previousElementSibling !== swiperEl) {
+        swiperEl.appendChild(controls);
+      }
+
+      controls._omamaRelocated = false;
+      controls.style.removeProperty("transform");
+      controls.style.removeProperty("opacity");
+    });
+  }
+
+  function scheduleThemeScrollRefresh() {
+    [0, 200, 500, 1000, 2000, 4000].forEach(function (delay) {
+      window.setTimeout(function () {
+        if (!window.ScrollTrigger || typeof window.ScrollTrigger.refresh !== "function") return;
+        try {
+          window.ScrollTrigger.refresh(true);
+        } catch (e) {}
+      }, delay);
+    });
+  }
+
+  function fixTypicalUnitGalleryDom() {
+    document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
+      var root = wrap.querySelector(":scope > .relative");
+      if (!root) return;
+
+      root.style.position = "relative";
+      root.style.width = "100%";
+      if (root.offsetHeight < window.innerHeight * 2) {
+        root.style.height = "10000vh";
+      }
+
+      var fixed = root.querySelector(".fixed");
+      if (fixed) {
+        fixed.style.position = "fixed";
+        fixed.style.inset = "0";
+        fixed.style.width = "100%";
+        fixed.style.height = "100%";
+        fixed.style.overflow = "hidden";
+        fixed.style.zIndex = "0";
+      }
+
+      if (root.querySelector("canvas")) {
+        window.dispatchEvent(new Event("resize"));
+      }
+    });
+  }
+
+  function scheduleTypicalUnitGalleryFix() {
+    if (!document.querySelector("section.typical_unit .gallery-wrap")) return;
+    [0, 300, 800, 1600, 3200].forEach(function (delay) {
+      window.setTimeout(fixTypicalUnitGalleryDom, delay);
+    });
+  }
+
+  var homeLivingPinRebuildTimer = null;
+
+  function rebuildHomeLivingPinScroll() {
+    if (isMobileViewport()) return;
+
+    var livingTrack = document.querySelector("section.living .living-track");
+    var pinWrap = document.querySelector(".pin-wrap");
+    if (!livingTrack || !pinWrap || !window.gsap || !window.ScrollTrigger) return;
+
+    var left = livingTrack.getBoundingClientRect().left;
+    var distance = Math.max(0, livingTrack.scrollWidth - window.innerWidth + left + 25);
+    if (distance <= 0) return;
+
+    window.ScrollTrigger.getAll()
+      .slice()
+      .forEach(function (st) {
+        var trigger = st.trigger;
+        var node = typeof trigger === "string" ? document.querySelector(trigger) : trigger;
+        if (node && node.classList && node.classList.contains("pin-wrap")) {
+          try {
+            st.kill(true);
+          } catch (e) {}
+        }
+      });
+
+    window.gsap.set(livingTrack, { x: 0 });
+    window.gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: pinWrap,
+          start: "top top",
+          end: "+=" + (distance + 400),
+          scrub: true,
+          pin: true,
+        },
+      })
+      .to({}, { duration: 0, ease: "none" })
+      .to(livingTrack, { x: -distance, ease: "none", duration: distance })
+      .to({}, { duration: 0, ease: "none" });
+
+    try {
+      window.ScrollTrigger.refresh(true);
+    } catch (e) {}
+  }
+
+  function waitForLivingTrackImages(callback) {
+    var imgs = document.querySelectorAll("section.living .living-track img");
+    if (!imgs.length) {
+      callback();
+      return;
+    }
+
+    var pending = 0;
+    imgs.forEach(function (img) {
+      if (!img.complete) pending += 1;
+    });
+
+    if (!pending) {
+      callback();
+      return;
+    }
+
+    var done = false;
+    function finish() {
+      pending -= 1;
+      if (!done && pending <= 0) {
+        done = true;
+        callback();
+      }
+    }
+
+    imgs.forEach(function (img) {
+      if (!img.complete) {
+        img.addEventListener("load", finish, { once: true });
+        img.addEventListener("error", finish, { once: true });
+      }
+    });
+
+    window.setTimeout(function () {
+      if (!done) {
+        done = true;
+        callback();
+      }
+    }, 5000);
+  }
+
+  function scheduleHomeLivingDesktopScrollFix() {
+    if (isMobileViewport() || !document.querySelector("section.living .living-track")) return;
+
+    function queueRebuild() {
+      clearTimeout(homeLivingPinRebuildTimer);
+      homeLivingPinRebuildTimer = window.setTimeout(function () {
+        waitForLivingTrackImages(rebuildHomeLivingPinScroll);
+      }, 120);
+    }
+
+    [400, 1000, 2500, 5000].forEach(function (delay) {
+      window.setTimeout(queueRebuild, delay);
+    });
+
+    var track = document.querySelector("section.living .living-track");
+    if (track && !track._omamaLivingRo && typeof ResizeObserver !== "undefined") {
+      track._omamaLivingRo = true;
+      new ResizeObserver(function () {
+        if (isMobileViewport()) return;
+        queueRebuild();
+      }).observe(track);
+    }
+  }
+
+  function handleViewportScrollModeChange() {
+    if (isLivingPage() && isMobileViewport()) {
+      scheduleLivingMobileFix();
+      return;
+    }
+
+    document.documentElement.classList.remove("omama-living-mobile");
+    restoreHomeLivingSwiperDesktop();
+    scheduleThemeScrollRefresh();
+    scheduleTypicalUnitGalleryFix();
+
+    if (!isMobileViewport()) {
+      scheduleHomeLivingDesktopScrollFix();
+    }
+  }
+
   function afterBarbaPage() {
     applyLang(currentLang());
     bootMaps();
@@ -2817,6 +3006,10 @@
     bootIgMedia(isHomepageContainer(document.querySelector('[data-barba="container"]')));
     scheduleLivingMobileFix();
     scheduleHomeLivingSwiperFix();
+    restoreHomeLivingSwiperDesktop();
+    scheduleThemeScrollRefresh();
+    scheduleTypicalUnitGalleryFix();
+    scheduleHomeLivingDesktopScrollFix();
   }
 
   function scheduleIgBootRetries() {
@@ -3045,6 +3238,18 @@
     hookBarba();
     scheduleLivingMobileFix();
     scheduleHomeLivingSwiperFix();
+    restoreHomeLivingSwiperDesktop();
+    scheduleThemeScrollRefresh();
+    scheduleTypicalUnitGalleryFix();
+    scheduleHomeLivingDesktopScrollFix();
+
+    window.addEventListener("load", function () {
+      handleViewportScrollModeChange();
+    });
+
+    window.addEventListener("resize", function () {
+      handleViewportScrollModeChange();
+    });
   }
 
   document.addEventListener(

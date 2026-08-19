@@ -1113,6 +1113,63 @@ header .omama-lang-pill svg {
   display: block;
 }
 
+/* typical_unit Three.js tunnel: theme injects Tailwind utility classes that are
+   not shipped in fjkg6.css — without explicit height the scroll root collapses. */
+section.typical_unit .gallery-wrap > .relative {
+  height: 10000vh;
+  position: relative;
+  transition: background-color 0.7s ease;
+  width: 100%;
+}
+
+section.typical_unit .gallery-wrap > .relative > .fixed {
+  height: 100%;
+  inset: 0;
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  z-index: 0;
+}
+
+section.typical_unit .gallery-wrap > .relative canvas,
+section.typical_unit .gallery-wrap canvas {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+section.typical_unit .gallery-wrap:has(canvas):before {
+  display: none;
+}
+
+section.typical_unit .gallery-wrap .press-cursor {
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+}
+
+@media only screen and (min-width: 1024px) {
+  .pin-wrap {
+    overflow: visible;
+  }
+
+  section.living .living-track {
+    will-change: transform;
+  }
+
+  body.template-way-of-living .total-scroll {
+    height: calc(100vh - 50px);
+    overflow-x: hidden;
+    overscroll-behavior: none;
+  }
+
+  body.template-way-of-living .scroll-wrap {
+    height: 100%;
+  }
+}
+
 .js-modal[data-id="monday"] .modal-content {
   display: flex;
   flex-direction: column;
