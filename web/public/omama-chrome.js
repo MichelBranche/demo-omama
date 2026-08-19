@@ -2607,6 +2607,108 @@
     });
   }
 
+  function isLivingPage() {
+    return (
+      document.body.classList.contains("template-way-of-living") ||
+      document.body.classList.contains("our-way-of-living")
+    );
+  }
+
+  function isMobileViewport() {
+    return !!(window.matchMedia && window.matchMedia("(max-width: 1023px)").matches);
+  }
+
+  function resetLivingMobileScroll() {
+    if (!isLivingPage() || !isMobileViewport()) return;
+
+    document.documentElement.classList.add("omama-living-mobile");
+
+    if (window.ScrollTrigger && typeof window.ScrollTrigger.getAll === "function") {
+      window.ScrollTrigger.getAll().forEach(function (st) {
+        try {
+          st.kill(true);
+        } catch (e) {}
+      });
+      try {
+        window.ScrollTrigger.clearScrollMemory();
+        window.ScrollTrigger.refresh(true);
+      } catch (e) {}
+    }
+
+    if (window.gsap) {
+      window.gsap.killTweensOf(
+        ".template-way-of-living .info, .template-way-of-living .eye, .template-way-of-living .smiley, .template-way-of-living .way-of-living, .template-way-of-living .what_it_means, .template-way-of-living .what_define_us, .template-way-of-living .why_we_stand_out, .template-way-of-living .total-scroll"
+      );
+      window.gsap.set(".template-way-of-living .info", {
+        autoAlpha: 1,
+        clearProps: "transform,x,y,xPercent,yPercent",
+      });
+      window.gsap.set(
+        ".template-way-of-living .what_it_means .list-item, .template-way-of-living .what_define_us .item, .template-way-of-living .why_we_stand_out .item",
+        { autoAlpha: 1, y: 0, clearProps: "transform,height" }
+      );
+      window.gsap.set(".template-way-of-living .eye, .template-way-of-living .smiley, .template-way-of-living .way-of-living", {
+        autoAlpha: 1,
+        clearProps: "transform,x,y,xPercent,yPercent",
+      });
+      window.gsap.set(".template-way-of-living .eye .title, .template-way-of-living .eye .subtitle_1, .template-way-of-living .eye .subtitle_2", {
+        autoAlpha: 1,
+      });
+    }
+
+    var swiperEl = document.querySelector(".template-way-of-living .what-it-means-swiper");
+    if (swiperEl && swiperEl.swiper) {
+      swiperEl.swiper.params.allowTouchMove = true;
+      swiperEl.swiper.params.pagination = swiperEl.swiper.params.pagination || { clickable: true };
+      swiperEl.swiper.update();
+    }
+
+    var totalScroll = document.querySelector(".template-way-of-living .total-scroll");
+    if (totalScroll) {
+      totalScroll.classList.remove("lenis", "lenis-smooth");
+      totalScroll.style.removeProperty("transform");
+    }
+
+    if (window.lenis && typeof window.lenis.destroy === "function") {
+      try {
+        window.lenis.destroy();
+        window.lenis = null;
+      } catch (e) {}
+    } else if (window.lenis && typeof window.lenis.start === "function") {
+      try {
+        window.lenis.start();
+      } catch (e) {}
+    }
+  }
+
+  function scheduleLivingMobileFix() {
+    if (!isLivingPage() || !isMobileViewport()) return;
+    [400, 900, 1600].forEach(function (delay) {
+      window.setTimeout(resetLivingMobileScroll, delay);
+    });
+  }
+
+  function resetHomeLivingSwiperControls() {
+    if (!isMobileViewport()) return;
+
+    document.querySelectorAll("section.living .living-track .swiper-controls").forEach(function (el) {
+      if (window.gsap) {
+        window.gsap.killTweensOf(el);
+        window.gsap.set(el, { clearProps: "transform,x,y,xPercent,yPercent,opacity" });
+      }
+      el.style.removeProperty("transform");
+      el.style.removeProperty("translate");
+      el.style.opacity = "1";
+    });
+  }
+
+  function scheduleHomeLivingSwiperFix() {
+    if (!isMobileViewport()) return;
+    [0, 400, 900, 1600].forEach(function (delay) {
+      window.setTimeout(resetHomeLivingSwiperControls, delay);
+    });
+  }
+
   function afterBarbaPage() {
     applyLang(currentLang());
     bootMaps();
@@ -2617,6 +2719,8 @@
     initBookForm();
     initHeroVideo();
     bootIgMedia(isHomepageContainer(document.querySelector('[data-barba="container"]')));
+    scheduleLivingMobileFix();
+    scheduleHomeLivingSwiperFix();
   }
 
   function scheduleIgBootRetries() {
@@ -2843,6 +2947,8 @@
       setTimeout(finishIntro, 250);
     }
     hookBarba();
+    scheduleLivingMobileFix();
+    scheduleHomeLivingSwiperFix();
   }
 
   document.addEventListener(

@@ -384,6 +384,11 @@ def swap_remote_images(html: str, locals_: list[str]) -> str:
         "",
         html,
     )
+    html = re.sub(
+        r'\s+srcset="[^"]*/wp-content/uploads/[^"]*\.(?:jpg|jpeg|png|webp)[^"]*"',
+        "",
+        html,
+    )
     return html
 
 

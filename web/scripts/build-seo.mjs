@@ -158,6 +158,40 @@ function promoteHeadings($, page, lang) {
 
 // ---------------------------------------------------------------- images
 
+// WordPress responsive srcset leftovers still point at Units stock photos.
+// Mobile picks the 683w/768w crop, so the page looks nothing like desktop.
+function sanitizeResponsiveImages($) {
+  let fixed = 0;
+
+  $("img[src]").each((i, el) => {
+    const $img = $(el);
+    const src = ($img.attr("src") || "").split("?")[0];
+    const srcset = $img.attr("srcset") || "";
+    if (!srcset || !/\/wp-content\/uploads\//i.test(srcset)) return;
+    if (!/^\/images\//i.test(src)) return;
+
+    const width = parseInt($img.attr("width") || "0", 10);
+    if (width > 0) {
+      $img.attr("srcset", `${src} ${width}w`);
+      $img.attr("sizes", "100vw");
+    } else {
+      $img.removeAttr("srcset");
+      $img.removeAttr("sizes");
+    }
+    fixed += 1;
+  });
+
+  $("picture source[srcset]").each((i, el) => {
+    const srcset = $(el).attr("srcset") || "";
+    if (!/\/wp-content\/uploads\//i.test(srcset)) return;
+    if (!/\.(jpe?g|png|webp)(\?|$)/i.test(srcset)) return;
+    $(el).remove();
+    fixed += 1;
+  });
+
+  return fixed;
+}
+
 function baseName(src) {
   const clean = String(src || "").replace(/\?.*$/, "");
   const file = clean.split("/").pop() || "";
@@ -254,6 +288,7 @@ function buildPage(page, lang, master, translator) {
   translateDocument($, lang, translator);
   rewriteUrls($, lang);
   buildLanguageSwitcher($, page, lang);
+  sanitizeResponsiveImages($);
   const headings = promoteHeadings($, page, lang);
   const images = describeImages($, lang);
 

@@ -116,14 +116,6 @@ section.hero .inner-wrap > * {
   z-index: 3;
 }
 
-@media only screen and (max-width: 1023px) {
-  html.omama-skip-preloader .hero .image-wrap,
-  section.hero .omama-hero-media,
-  section.hero .image-wrap.omama-hero-media {
-    height: 100% !important;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   .hero .omama-hero-video,
   .omama-hero-video {
@@ -258,6 +250,186 @@ header .header-wrap .logo-wrap .logo .omama-hotel {
     margin-top: 3px;
     padding-left: 0.28em;
     width: auto;
+  }
+
+  /* Fixed header overlaps the first menu row ("01") and the top of hero photos
+     when padding/margin is a few pixels short on touch viewports. */
+  :root {
+    --omama-mobile-header-h: calc(70px + env(safe-area-inset-top, 0px));
+    --omama-mobile-hero-gap: 16px;
+  }
+
+  header {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  header .header-wrap {
+    position: relative;
+    z-index: 5;
+  }
+
+  header .hamburger,
+  header .header-wrap .logo-wrap {
+    position: relative;
+    z-index: 6;
+  }
+
+  header .header-wrap ul.main-menu {
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    padding-top: calc(var(--omama-mobile-header-h) + 20px);
+    z-index: 1;
+  }
+
+  header .header-wrap ul.main-menu > li > a {
+    overflow: visible;
+    padding: 18px 14px 14px;
+  }
+
+  header .header-wrap ul.main-menu > li > a .index {
+    display: block;
+    line-height: 1.15;
+  }
+
+  #app {
+    overflow-x: clip;
+    overflow-y: visible;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  body.omama-map-page #app {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  section.hero {
+    display: grid !important;
+    height: calc(100dvh - var(--omama-mobile-header-h) - var(--omama-mobile-hero-gap) - 16px) !important;
+    margin-top: calc(var(--omama-mobile-header-h) + var(--omama-mobile-hero-gap)) !important;
+    padding: 24px 0 28px !important;
+    place-content: center !important;
+  }
+
+  section.hero .inner-wrap {
+    align-items: center;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 28px !important;
+    width: 100%;
+  }
+
+  section.hero .inner-wrap .title {
+    font-size: clamp(34px, 9.5vw, 44px) !important;
+    letter-spacing: 0.14em;
+    line-height: 1 !important;
+    max-width: 100%;
+    text-align: center;
+  }
+
+  section.hero .inner-wrap .description {
+    font-size: clamp(17px, 4.8vw, 22px) !important;
+    line-height: 1.3 !important;
+    margin-top: 16px !important;
+    max-width: min(340px, 90vw) !important;
+    padding: 0 6px !important;
+    text-align: center;
+  }
+
+  section.hero .inner-wrap .cta {
+    margin-top: 32px !important;
+    min-height: 44px;
+    padding: 13px 24px;
+  }
+
+  html.omama-skip-preloader .hero .image-wrap,
+  section.hero .omama-hero-media,
+  section.hero .image-wrap.omama-hero-media {
+    border-radius: var(--border-radius);
+    bottom: 0 !important;
+    height: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+  }
+
+  section.hero .omama-hero-poster,
+  section.hero .omama-hero-video,
+  section.hero .image-wrap img {
+    object-position: center center;
+  }
+
+  .single-unit section.hero-unit {
+    margin-top: calc(var(--omama-mobile-header-h) + var(--omama-mobile-hero-gap)) !important;
+  }
+
+  .single-unit section.hero-unit .gallery-wrap {
+    min-height: 240px;
+  }
+
+  .template-community section.hero-unit,
+  .template-community .hero-unit {
+    margin-top: calc(var(--omama-mobile-header-h) + var(--omama-mobile-hero-gap)) !important;
+  }
+
+  section.living .living-track .swiper-living {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  section.living .living-track .swiper-controls {
+    align-items: center;
+    background: rgba(244, 233, 225, 0.98);
+    border: 1px solid rgba(0, 0, 0, 0.14);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    bottom: auto !important;
+    display: flex !important;
+    gap: 4px;
+    justify-content: center;
+    left: auto !important;
+    margin: 8px auto 0;
+    opacity: 1 !important;
+    padding: 6px 8px;
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    width: auto !important;
+    z-index: 6;
+  }
+
+  section.living .living-track .swiper-controls button {
+    align-items: center;
+    background: #fff;
+    border-radius: 999px;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px !important;
+  }
+
+  section.living .living-track .swiper-controls button svg {
+    height: 22px;
+    width: 22px;
+  }
+
+  section.living .living-track .swiper-controls path {
+    fill: #000 !important;
+  }
+
+  section.living .living-track .swiper-controls .button-next {
+    border-bottom: none !important;
+    border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
+    order: 2;
+  }
+
+  section.living .living-track .swiper-controls .button-prev svg,
+  section.living .living-track .swiper-controls .button-next svg {
+    animation: none !important;
   }
 }
 
@@ -2469,5 +2641,186 @@ body.omama-ig-viewer-open .omama-ig-card.is-viewer-source .omama-ig-slides {
   .omama-ig-viewer-post-nav svg {
     height: 18px;
     width: 18px;
+  }
+}
+
+/* Living (Omama): the theme pins sections inside .total-scroll for desktop
+   scrub animations. On touch viewports that traps content (info hidden,
+   sections pushed thousands of px down). Reflow into a normal page. */
+@media only screen and (max-width: 1023px) {
+  body.template-way-of-living #app {
+    overflow: visible !important;
+  }
+
+  body.template-way-of-living .total-scroll {
+    height: auto !important;
+    overflow: visible !important;
+    overscroll-behavior: auto !important;
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+  }
+
+  body.template-way-of-living .scroll-wrap {
+    height: auto !important;
+    overscroll-behavior: auto !important;
+  }
+
+  body.template-way-of-living .lottie_animation_wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    padding-bottom: 1.25rem;
+  }
+
+  body.template-way-of-living .js-lottie-full {
+    height: min(52vh, 380px) !important;
+    left: auto !important;
+    min-height: 220px;
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+  }
+
+  body.template-way-of-living .js-lottie-full svg {
+    height: 100% !important;
+    width: 100% !important;
+  }
+
+  body.template-way-of-living .way-of-living,
+  body.template-way-of-living .eye,
+  body.template-way-of-living .smiley {
+    left: auto !important;
+    padding: 0 1.25rem;
+    position: relative !important;
+    top: auto !important;
+    transform: none !important;
+    width: 100% !important;
+  }
+
+  body.template-way-of-living .way-of-living {
+    width: 100% !important;
+  }
+
+  body.template-way-of-living .way-of-living span {
+    font-size: clamp(28px, 9vw, 40px) !important;
+  }
+
+  body.template-way-of-living .eye .title {
+    font-size: clamp(22px, 6vw, 28px) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  body.template-way-of-living .eye .subtitle_1,
+  body.template-way-of-living .eye .subtitle_2 {
+    font-size: 15px !important;
+    line-height: 1.35 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  body.template-way-of-living .eye .subtitle_2 {
+    margin-top: 0.75rem;
+    position: relative !important;
+    top: auto !important;
+  }
+
+  body.template-way-of-living .smiley .title {
+    font-size: clamp(28px, 9vw, 40px) !important;
+    white-space: normal !important;
+  }
+
+  body.template-way-of-living .info {
+    height: auto !important;
+    margin-top: 0.5rem;
+    min-height: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  body.template-way-of-living .info .description {
+    font-size: clamp(17px, 4.5vw, 22px) !important;
+  }
+
+  body.template-way-of-living .what_it_means-arrows-wrap,
+  body.template-way-of-living .what_define_us-arrows-wrap,
+  body.template-way-of-living .why_we_stand_out-arrows-wrap {
+    margin: 1.25rem 0 0.75rem;
+  }
+
+  body.template-way-of-living .what_it_means-arrows-wrap .arrows-header span,
+  body.template-way-of-living .what_define_us-arrows-wrap .arrows-header span,
+  body.template-way-of-living .why_we_stand_out-arrows-wrap .arrows-header span {
+    font-size: clamp(22px, 6.5vw, 32px) !important;
+    white-space: normal !important;
+  }
+
+  body.template-way-of-living .what_it_means {
+    height: auto !important;
+    margin: 0 0 1.5rem;
+    overflow: visible !important;
+    position: relative !important;
+  }
+
+  body.template-way-of-living .what_it_means .what-it-means-swiper,
+  body.template-way-of-living .what_it_means .swiper-slide {
+    height: auto !important;
+  }
+
+  body.template-way-of-living .what_it_means .images-container {
+    height: min(55vh, 420px) !important;
+    min-height: 220px;
+  }
+
+  body.template-way-of-living .what_it_means .list {
+    height: auto !important;
+    pointer-events: auto !important;
+    position: relative !important;
+  }
+
+  body.template-way-of-living .what_it_means .list-item,
+  body.template-way-of-living .what_it_means .list-item .inner-wrap {
+    opacity: 1 !important;
+    transform: none !important;
+    visibility: visible !important;
+  }
+
+  body.template-way-of-living .what_define_us {
+    gap: 12px;
+    grid-template-columns: 1fr !important;
+    height: auto !important;
+    margin-bottom: 1.5rem;
+  }
+
+  body.template-way-of-living .what_define_us .item {
+    height: auto !important;
+    min-height: 0 !important;
+  }
+
+  body.template-way-of-living .what_define_us .item .inner-wrap {
+    justify-content: flex-start !important;
+  }
+
+  body.template-way-of-living .strip-bar {
+    margin: 0 0 1.5rem;
+  }
+
+  body.template-way-of-living .why_we_stand_out {
+    height: auto !important;
+    margin-bottom: 1.5rem;
+    position: relative !important;
+  }
+
+  body.template-way-of-living .why_we_stand_out .item {
+    min-height: 100px;
+  }
+
+  body.template-way-of-living .why_we_stand_out .round-counter-wrap {
+    display: none;
   }
 }
