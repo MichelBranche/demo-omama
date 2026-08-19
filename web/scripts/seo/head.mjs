@@ -94,11 +94,11 @@ export function buildHead($, { page, lang, meta, config, graph }) {
   add("");
   add(`<meta name="theme-color" content="${SITE.themeColor}">`);
   add(`<meta name="apple-mobile-web-app-title" content="${escapeAttr(SITE.shortName)}">`);
-  add('<link rel="icon" href="/favicon.ico" sizes="32x32">');
-  add('<link rel="icon" type="image/png" href="/icons/favicon-32.png" sizes="32x32">');
-  add('<link rel="icon" type="image/png" href="/icons/favicon-192.png" sizes="192x192">');
-  add('<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">');
-  add('<link rel="manifest" href="/site.webmanifest">');
+  add('<link rel="icon" href="/favicon.ico?v=omama2" sizes="32x32">');
+  add('<link rel="icon" type="image/png" href="/icons/favicon-32.png?v=omama2" sizes="32x32">');
+  add('<link rel="icon" type="image/png" href="/icons/favicon-192.png?v=omama2" sizes="192x192">');
+  add('<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png?v=omama2">');
+  add('<link rel="manifest" href="/site.webmanifest?v=omama2">');
 
   add("");
   add('<link rel="preconnect" href="https://book.blastness.com" crossorigin>');

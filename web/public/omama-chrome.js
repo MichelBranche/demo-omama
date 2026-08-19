@@ -2688,24 +2688,120 @@
     });
   }
 
-  function resetHomeLivingSwiperControls() {
+  function lockLivingSwiperControlsLayout(controls) {
+    if (!controls) return;
+    if (window.gsap) {
+      window.gsap.killTweensOf(controls);
+      window.gsap.set(controls, { clearProps: "transform,x,y,xPercent,yPercent,opacity" });
+    }
+    controls.style.setProperty("transform", "none", "important");
+    controls.style.setProperty("opacity", "1", "important");
+    controls.style.removeProperty("translate");
+  }
+
+  function watchLivingSwiperControlsStyle(controls) {
+    if (!controls || controls._omamaStyleWatch || typeof MutationObserver === "undefined") return;
+    controls._omamaStyleWatch = true;
+    new MutationObserver(function () {
+      if (!isMobileViewport()) return;
+      if (controls.style.transform && controls.style.transform.indexOf("none") === -1) {
+        lockLivingSwiperControlsLayout(controls);
+      }
+      if (controls.style.opacity && controls.style.opacity !== "1") {
+        controls.style.setProperty("opacity", "1", "important");
+      }
+    }).observe(controls, { attributes: true, attributeFilter: ["style"] });
+  }
+
+  function bindLivingSwiperControls(swiper, controls) {
+    if (!swiper || !controls || controls._omamaNavBound) return;
+    controls._omamaNavBound = true;
+
+    var nextBtn = controls.querySelector(".button-next");
+    var prevBtn = controls.querySelector(".button-prev");
+
+    function goNext(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      lockLivingSwiperControlsLayout(controls);
+      if (!swiper.destroyed) swiper.slideNext();
+    }
+
+    function goPrev(event) {
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      lockLivingSwiperControlsLayout(controls);
+      if (!swiper.destroyed) swiper.slidePrev();
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener("click", goNext, true);
+      nextBtn.addEventListener("touchend", goNext, { capture: true, passive: false });
+    }
+    if (prevBtn) {
+      prevBtn.addEventListener("click", goPrev, true);
+      prevBtn.addEventListener("touchend", goPrev, { capture: true, passive: false });
+    }
+
+    try {
+      swiper.params.allowTouchMove = true;
+      swiper.allowTouchMove = true;
+      if (swiper.navigation) {
+        swiper.params.navigation.nextEl = nextBtn;
+        swiper.params.navigation.prevEl = prevBtn;
+        swiper.navigation.destroy();
+        swiper.navigation.init();
+        swiper.navigation.update();
+      }
+      swiper.update();
+    } catch (e) {}
+  }
+
+  function fixHomeLivingSwiperMobile() {
     if (!isMobileViewport()) return;
 
-    document.querySelectorAll("section.living .living-track .swiper-controls").forEach(function (el) {
-      if (window.gsap) {
-        window.gsap.killTweensOf(el);
-        window.gsap.set(el, { clearProps: "transform,x,y,xPercent,yPercent,opacity" });
+    document.querySelectorAll("section.living .living-track .swiper-living").forEach(function (swiperEl) {
+      var controls = swiperEl.querySelector(".swiper-controls");
+      if (!controls) return;
+
+      if (!controls._omamaRelocated) {
+        controls._omamaRelocated = true;
+        swiperEl.insertAdjacentElement("afterend", controls);
       }
-      el.style.removeProperty("transform");
-      el.style.removeProperty("translate");
-      el.style.opacity = "1";
+
+      lockLivingSwiperControlsLayout(controls);
+      watchLivingSwiperControlsStyle(controls);
+
+      var swiper = swiperEl.swiper;
+      if (swiper) {
+        bindLivingSwiperControls(swiper, controls);
+        swiper.on("slideChangeTransitionEnd", function () {
+          lockLivingSwiperControlsLayout(controls);
+        });
+      } else if (!swiperEl._omamaSwiperPoll) {
+        swiperEl._omamaSwiperPoll = true;
+        var attempts = 0;
+        var poll = window.setInterval(function () {
+          attempts += 1;
+          if (swiperEl.swiper) {
+            window.clearInterval(poll);
+            fixHomeLivingSwiperMobile();
+          } else if (attempts > 50) {
+            window.clearInterval(poll);
+          }
+        }, 150);
+      }
     });
   }
 
   function scheduleHomeLivingSwiperFix() {
     if (!isMobileViewport()) return;
-    [0, 400, 900, 1600].forEach(function (delay) {
-      window.setTimeout(resetHomeLivingSwiperControls, delay);
+    [0, 300, 700, 1200, 2000, 3500, 5000].forEach(function (delay) {
+      window.setTimeout(fixHomeLivingSwiperMobile, delay);
     });
   }
 

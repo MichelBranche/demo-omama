@@ -380,7 +380,8 @@ header .header-wrap .logo-wrap .logo .omama-hotel {
     gap: 12px;
   }
 
-  section.living .living-track .swiper-controls {
+  section.living .living-track > .swiper-controls,
+  section.living .living-track .swiper-living .swiper-controls {
     align-items: center;
     background: rgba(244, 233, 225, 0.98);
     border: 1px solid rgba(0, 0, 0, 0.14);
@@ -391,17 +392,21 @@ header .header-wrap .logo-wrap .logo .omama-hotel {
     gap: 4px;
     justify-content: center;
     left: auto !important;
-    margin: 8px auto 0;
+    margin: 12px auto 0;
     opacity: 1 !important;
     padding: 6px 8px;
+    pointer-events: auto !important;
     position: relative !important;
     top: auto !important;
+    touch-action: manipulation;
     transform: none !important;
+    translate: none !important;
     width: auto !important;
     z-index: 6;
   }
 
-  section.living .living-track .swiper-controls button {
+  section.living .living-track > .swiper-controls button,
+  section.living .living-track .swiper-living .swiper-controls button {
     align-items: center;
     background: #fff;
     border-radius: 999px;
@@ -410,25 +415,32 @@ header .header-wrap .logo-wrap .logo .omama-hotel {
     min-height: 44px;
     min-width: 44px;
     padding: 10px !important;
+    pointer-events: auto !important;
+    touch-action: manipulation;
   }
 
-  section.living .living-track .swiper-controls button svg {
+  section.living .living-track > .swiper-controls button svg,
+  section.living .living-track .swiper-living .swiper-controls button svg {
     height: 22px;
     width: 22px;
   }
 
-  section.living .living-track .swiper-controls path {
+  section.living .living-track > .swiper-controls path,
+  section.living .living-track .swiper-living .swiper-controls path {
     fill: #000 !important;
   }
 
-  section.living .living-track .swiper-controls .button-next {
+  section.living .living-track > .swiper-controls .button-next,
+  section.living .living-track .swiper-living .swiper-controls .button-next {
     border-bottom: none !important;
     border-left: 1px solid rgba(0, 0, 0, 0.12) !important;
     order: 2;
   }
 
-  section.living .living-track .swiper-controls .button-prev svg,
-  section.living .living-track .swiper-controls .button-next svg {
+  section.living .living-track > .swiper-controls .button-prev svg,
+  section.living .living-track > .swiper-controls .button-next svg,
+  section.living .living-track .swiper-living .swiper-controls .button-prev svg,
+  section.living .living-track .swiper-living .swiper-controls .button-next svg {
     animation: none !important;
   }
 }
