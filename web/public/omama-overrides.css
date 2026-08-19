@@ -1,0 +1,2473 @@
+html.omama-skip-preloader body,
+body:not(.home) {
+  opacity: 1 !important;
+}
+
+html.omama-skip-preloader .preloader,
+body:not(.home) .preloader {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+html.omama-skip-preloader header {
+  transform: none !important;
+}
+
+html.omama-skip-preloader .hero .image-wrap {
+  border-radius: var(--border-radius) !important;
+  bottom: 0 !important;
+  height: calc(100dvh - 50px) !important;
+  left: 0 !important;
+  margin-top: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  width: 100% !important;
+}
+
+html.omama-skip-preloader .hero .image-wrap img,
+html.omama-skip-preloader .hero .image-wrap video {
+  translate: 0 !important;
+}
+
+html.omama-skip-preloader .hero .inner-wrap > span,
+html.omama-skip-preloader .hero .inner-wrap > a,
+html.omama-skip-preloader .hero .inner-wrap > button {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+section.hero .omama-hero-media,
+section.hero .image-wrap.omama-hero-media {
+  border-radius: var(--border-radius);
+  bottom: 0;
+  height: calc(100dvh - 50px);
+  left: 0;
+  overflow: hidden;
+  position: absolute !important;
+  transform: translateZ(0);
+  width: 100%;
+  z-index: 0;
+}
+
+section.map .map-photo.omama-hero-media {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  position: relative;
+  transform: translateZ(0);
+}
+
+.hero .omama-hero-poster {
+  display: block;
+  height: 100%;
+  left: 0;
+  min-height: 100%;
+  min-width: 100%;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+section.map .map-photo .omama-hero-poster,
+section.map .map-photo .omama-hero-video {
+  display: block;
+  height: 132% !important;
+  left: -16% !important;
+  min-height: 132% !important;
+  min-width: 132% !important;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  top: -16% !important;
+  width: 132% !important;
+}
+
+.hero .omama-hero-video,
+section.map .map-photo .omama-hero-video {
+  backface-visibility: hidden;
+  pointer-events: none;
+  transform: translateZ(0);
+  z-index: 0;
+}
+
+.hero .omama-hero-media::before {
+  background: rgba(0, 0, 0, 0.38);
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+section.hero .inner-wrap {
+  position: relative;
+  z-index: 3;
+}
+
+section.hero .inner-wrap > * {
+  pointer-events: auto;
+  position: relative;
+  z-index: 3;
+}
+
+@media only screen and (max-width: 1023px) {
+  html.omama-skip-preloader .hero .image-wrap,
+  section.hero .omama-hero-media,
+  section.hero .image-wrap.omama-hero-media {
+    height: 100% !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero .omama-hero-video,
+  .omama-hero-video {
+    display: none;
+  }
+}
+
+.hero .inner-wrap > .js-color-button-fill {
+  border-radius: var(--border-radius);
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0.04em 0.18em;
+  position: relative;
+}
+
+.hero .inner-wrap > .js-color-button-fill > span {
+  position: relative;
+  z-index: 1;
+}
+
+header .header-wrap .logo-wrap {
+  width: 100%;
+}
+
+header .header-wrap .logo-wrap .logo {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  overflow: visible;
+  text-align: center;
+  width: 100%;
+}
+
+header .header-wrap .logo-wrap .logo .omama-logo-spin {
+  display: block;
+  line-height: 0;
+  transform-origin: 50% 50%;
+  animation: omama-o-spin 32s linear infinite;
+}
+
+header .header-wrap .logo-wrap .logo img.omama-logo-img {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  max-width: 64px;
+  transform-origin: 50% 50%;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 64px;
+}
+
+header .header-wrap .logo-wrap .logo:hover .omama-logo-spin {
+  animation-duration: 6s;
+}
+
+header .header-wrap .logo-wrap .logo:hover img.omama-logo-img {
+  transform: scale(1.08);
+}
+
+header .header-wrap .logo-wrap .logo:hover .omama-hotel {
+  color: #ab54f7;
+  letter-spacing: 0.5em;
+}
+
+header .header-wrap .logo-wrap .logo .omama-wordmark {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin-top: 8px;
+  text-align: center;
+  width: 100%;
+}
+
+header .header-wrap .logo-wrap .logo .omama-mark {
+  color: #000;
+  display: block;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: clamp(15px, 1.05vw, 18px);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+header .header-wrap .logo-wrap .logo .omama-hotel {
+  color: #000;
+  display: block;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: clamp(9px, 0.62vw, 11px);
+  font-weight: 700;
+  letter-spacing: 0.38em;
+  line-height: 1;
+  margin-top: 5px;
+  padding-left: 0.38em;
+  text-align: center;
+  text-transform: lowercase;
+  transition: color 0.35s ease, letter-spacing 0.4s ease;
+  width: 100%;
+}
+
+@media only screen and (max-width: 1023px) {
+  header .header-wrap .logo-wrap .logo {
+    flex-direction: row;
+    gap: 8px;
+    justify-content: flex-start;
+    width: auto;
+  }
+
+  header .header-wrap .logo-wrap .logo img.omama-logo-img {
+    max-width: 36px;
+    width: 36px;
+  }
+
+  header .header-wrap .logo-wrap .logo .omama-wordmark {
+    margin-top: 0;
+    width: auto;
+  }
+
+  header .header-wrap .logo-wrap .logo .omama-mark {
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    margin-top: 0;
+    width: auto;
+  }
+
+  header .header-wrap .logo-wrap .logo .omama-hotel {
+    font-size: 8px;
+    letter-spacing: 0.28em;
+    margin-top: 3px;
+    padding-left: 0.28em;
+    width: auto;
+  }
+}
+
+@keyframes omama-o-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header .header-wrap .logo-wrap .logo .omama-logo-spin {
+    animation: none;
+  }
+
+  header .header-wrap .logo-wrap .logo:hover img.omama-logo-img,
+  header .header-wrap .logo-wrap .logo:hover .omama-hotel {
+    transform: none;
+    letter-spacing: inherit;
+    color: inherit;
+  }
+}
+
+footer .top-wrap a.logo .omama-mark {
+  display: block;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: clamp(64px, 14vw, 14vw);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  text-align: center;
+  width: 100%;
+}
+
+section.locations .map,
+section.locations .map.leaflet-container,
+section.map .map-photo,
+section.map .map-photo.leaflet-container,
+.single-unit section.location-unit .map,
+.single-unit section.location-unit .map.leaflet-container {
+  background: #e8ddd4;
+  overflow: hidden;
+  position: relative;
+}
+
+section.locations .map,
+section.locations .map.leaflet-container {
+  filter: none !important;
+  height: 100%;
+  isolation: isolate;
+  min-height: 336px;
+  transform: none !important;
+}
+
+section.locations .map .leaflet-pane,
+section.locations .map .leaflet-map-pane,
+.single-unit section.location-unit .map .leaflet-pane,
+.single-unit section.location-unit .map .leaflet-map-pane {
+  z-index: 1;
+}
+
+.single-unit section.location-unit .map,
+.single-unit section.location-unit .map.leaflet-container {
+  min-height: 250px;
+}
+
+.template-contact section.map .map-photo,
+.template-contact section.map .map-photo.leaflet-container {
+  border-radius: var(--border-radius);
+  min-height: 50vh;
+}
+
+.omama-map-ico-wrap,
+.leaflet-div-icon {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.omama-map-ico {
+  align-items: center;
+  border-radius: 50%;
+  display: flex;
+  height: 34px;
+  justify-content: center;
+  position: relative;
+  width: 34px;
+}
+
+.omama-map-ico:after {
+  background: inherit;
+  bottom: -5px;
+  content: "";
+  height: 10px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%) rotate(45deg);
+  width: 10px;
+}
+
+.omama-map-ico svg {
+  display: block;
+  height: 15px;
+  position: relative;
+  width: 15px;
+  z-index: 1;
+}
+
+.omama-map-leg-ico {
+  align-items: center;
+  border-radius: 50%;
+  display: inline-flex;
+  flex: 0 0 18px;
+  height: 18px;
+  justify-content: center;
+  width: 18px;
+}
+
+.omama-map-ico.is-start {
+  height: 40px;
+  width: 40px;
+}
+
+.omama-map-ico.is-start:after {
+  bottom: -6px;
+  height: 12px;
+  width: 12px;
+}
+
+.omama-map-ico.is-start svg {
+  height: 16px;
+  width: 16px;
+}
+
+.omama-map-leg-ico svg {
+  height: 11px;
+  width: 11px;
+}
+
+.omama-map-leg-swatch {
+  border-radius: 3px;
+  display: inline-block;
+  flex: 0 0 18px;
+  height: 10px;
+  width: 18px;
+}
+
+.leaflet-bottom.leaflet-left {
+  max-width: calc(100% - 16px);
+}
+
+.leaflet-container:not(.omama-map-full) .leaflet-bottom.leaflet-right {
+  bottom: 10px;
+  right: 10px;
+}
+
+.omama-map-legend {
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+  overflow: visible;
+  padding: 0;
+  width: min(228px, 100%);
+}
+
+.omama-map-legend-toggle {
+  align-items: center;
+  background: rgba(244, 233, 225, 0.96);
+  border: 0;
+  border-radius: 18px;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 10px;
+  justify-content: space-between;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  padding: 11px 14px;
+  text-align: left;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.omama-map-legend-chevron {
+  flex: 0 0 12px;
+  height: 12px;
+  transition: transform 0.25s ease;
+  width: 12px;
+}
+
+.omama-map-legend.is-open .omama-map-legend-chevron {
+  transform: rotate(180deg);
+}
+
+.omama-map-legend-panel {
+  background: rgba(244, 233, 225, 0.96);
+  border-radius: 18px;
+  display: none;
+  flex-direction: column;
+  gap: 2px;
+  max-height: min(240px, 38vh);
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: 8px 10px 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.omama-map-legend.is-open .omama-map-legend-panel {
+  display: flex;
+}
+
+.omama-map-legend-panel button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  gap: 8px;
+  line-height: 1.2;
+  padding: 7px 8px;
+  text-align: left;
+  width: 100%;
+}
+
+.omama-map-legend-panel button:hover,
+.omama-map-legend-panel button.is-active {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.omama-map-legend i {
+  border-radius: 99px;
+  display: block;
+  flex: 0 0 10px;
+  height: 10px;
+  width: 10px;
+}
+
+.single-unit section.location-unit .map .omama-map-legend-panel {
+  max-height: min(200px, 34vh);
+}
+
+@media only screen and (max-width: 1023px) {
+  .omama-map-legend {
+    width: min(200px, 100%);
+  }
+
+  .omama-map-legend-panel,
+  .single-unit section.location-unit .map .omama-map-legend-panel {
+    max-height: min(150px, 28vh);
+  }
+}
+
+.leaflet-popup-content-wrapper {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: none;
+  color: #111;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px;
+}
+
+.leaflet-popup-tip {
+  background: #fff;
+}
+
+.omama-map-pop {
+  min-width: 160px;
+}
+
+.omama-map-pop strong {
+  display: block;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+
+.omama-map-pop span {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  margin-top: 4px;
+  opacity: 0.7;
+  text-transform: uppercase;
+}
+
+.omama-map-pop p {
+  font-size: 13px;
+  line-height: 1.35;
+  margin: 8px 0 0;
+}
+
+.leaflet-container {
+  font-family: Alfabet, "Aeonik Pro", sans-serif;
+  isolation: isolate;
+  z-index: 0;
+}
+
+section.locations .info .tags {
+  gap: 0.65rem;
+}
+
+section.locations .info .tags a.tag {
+  align-items: center;
+  border-radius: 999px;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  color: inherit;
+  cursor: pointer;
+  gap: 0.5em;
+  position: relative;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition:
+    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.28s ease,
+    filter 0.28s ease;
+  will-change: transform;
+}
+
+section.locations .info .tags a.tag:hover {
+  box-shadow: 0 8px 22px rgba(17, 17, 17, 0.16);
+  transform: translate3d(0, -2px, 0) scale(1.02);
+}
+
+section.locations .info .tags a.tag:active {
+  box-shadow: 0 2px 8px rgba(17, 17, 17, 0.12);
+  transform: translate3d(0, 0, 0) scale(0.98);
+  transition-duration: 0.12s;
+}
+
+section.locations .info .tags a.tag:focus-visible {
+  outline: 2px solid #111;
+  outline-offset: 3px;
+}
+
+section.locations .info .tags a.tag svg {
+  display: block;
+  flex-shrink: 0;
+  height: 1em;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 1em;
+}
+
+section.locations .info .tags a.tag.background-green:hover svg {
+  transform: translate(1px, -2px) rotate(-10deg);
+}
+
+section.locations .info .tags a.tag.background-orange:hover {
+  filter: brightness(1.04);
+}
+
+section.locations .info .tags a.tag.background-green:hover {
+  filter: brightness(1.05);
+}
+
+/* Il tema sbiadisce al 50% il primo tag: con due pulsanti affiancati il primo
+   sembrava disattivato, e il contrasto sull'arancione era insufficiente. */
+section.locations .info .tags .tag:first-child {
+  color: #111;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  section.locations .info .tags a.tag,
+  section.locations .info .tags a.tag svg {
+    transition: none;
+  }
+
+  section.locations .info .tags a.tag:hover,
+  section.locations .info .tags a.tag:active {
+    box-shadow: none;
+    filter: none;
+    transform: none;
+  }
+
+  section.locations .info .tags a.tag.background-green:hover svg {
+    transform: none;
+  }
+}
+
+body.omama-map-page #app,
+body.omama-map-page .barba-container,
+body.omama-map-page .content,
+body.omama-map-page article,
+body.omama-map-page .omama-map-screen {
+  filter: none !important;
+  height: 100%;
+  margin: 0 !important;
+  max-width: none;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0 !important;
+  perspective: none !important;
+  transform: none !important;
+  width: 100%;
+}
+
+body.omama-map-page footer,
+body.omama-map-page .preloader {
+  display: none !important;
+}
+
+body.omama-map-page header {
+  z-index: 1100;
+}
+
+.omama-map-full,
+.omama-map-full.leaflet-container {
+  border-radius: 0 !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  isolation: isolate;
+  left: 0;
+  min-height: 100vh !important;
+  min-height: 100dvh !important;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 0;
+}
+
+.omama-map-full .leaflet-bottom.leaflet-right {
+  bottom: 18px;
+  right: 18px;
+  z-index: 800;
+}
+
+.omama-map-full .leaflet-top.leaflet-right {
+  right: 18px;
+  top: 18px;
+  z-index: 800;
+}
+
+.omama-map-full .omama-map-legend {
+  width: min(260px, calc(100vw - 36px));
+}
+
+body.omama-map-page header {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.omama-map-page .omama-rail-toggle {
+  align-items: center;
+  background: rgba(244, 233, 225, 0.96);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  height: 36px;
+  justify-content: center;
+  position: fixed;
+  left: calc(clamp(142px, 9.375vw, 9.375vw) - 18px);
+  top: 50%;
+  transform: translateY(-50%);
+  transition: left 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  width: 36px;
+  z-index: 1200;
+}
+
+body.omama-map-page .omama-rail-toggle svg {
+  display: block;
+  height: 14px;
+  transition: transform 0.35s ease;
+  width: 14px;
+}
+
+body.omama-map-page.omama-rail-collapsed header {
+  transform: translateX(-100%);
+}
+
+html.omama-skip-preloader body.omama-map-page.omama-rail-collapsed header {
+  transform: translateX(-100%) !important;
+}
+
+body.omama-map-page.omama-rail-collapsed .omama-rail-toggle {
+  left: 12px;
+}
+
+body.omama-map-page.omama-rail-collapsed .omama-rail-toggle svg {
+  transform: rotate(180deg);
+}
+
+body.omama-map-page .header-wrap {
+  transition: opacity 0.28s ease;
+}
+
+body.omama-map-page.omama-rail-collapsed .header-wrap {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 1023px) {
+  body.omama-map-page .omama-rail-toggle {
+    display: none;
+  }
+
+  html.omama-skip-preloader body.omama-map-page.omama-rail-collapsed header,
+  body.omama-map-page.omama-rail-collapsed header {
+    transform: none !important;
+  }
+
+  body.omama-map-page.omama-rail-collapsed .header-wrap {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.modal,
+.modal.open,
+.js-modal {
+  z-index: 40;
+}
+
+@media only screen and (min-width: 1024px) {
+  section.locations .map {
+    min-height: 32.813vw;
+  }
+
+  .single-unit section.location-unit .map {
+    height: 100%;
+    min-height: 280px;
+  }
+}
+
+section.map .map-photo {
+  border-radius: var(--border-radius);
+  min-height: 50vh;
+  overflow: hidden;
+}
+
+.omama-contact-form {
+  margin-top: 24px;
+}
+
+section.map .form .omama-contact-form > a.button {
+  align-items: center;
+  background: #ab54f7;
+  border-radius: 12px;
+  color: #111;
+  display: flex !important;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  justify-content: center;
+  letter-spacing: 0.04em;
+  margin-left: auto;
+  min-width: 220px;
+  padding: 22px 34px;
+  text-align: center;
+  width: fit-content;
+}
+
+@media only screen and (max-width: 1023px) {
+  section.map .form .omama-contact-form > a.button {
+    font-size: 19px;
+    min-width: 0;
+    padding: 18px 26px;
+    width: 100%;
+  }
+}
+
+header .header-wrap ul.main-menu > li > a[href*="/aosta"] {
+  background: #00aa3c;
+}
+
+header .header-wrap ul.main-menu > li > a[href*="/omamamood"] {
+  background: #ff6100;
+}
+
+header .header-wrap > .omama-lang-pill,
+header .header-wrap ul.main-menu > li > .omama-lang-pill {
+  align-items: center;
+  background: #000;
+  border-radius: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  height: auto;
+  justify-content: space-between;
+  margin-top: 10px;
+  min-height: 42px;
+  overflow: hidden;
+  padding: 11px 12px;
+  position: relative;
+  width: 100%;
+  z-index: 3;
+}
+
+header .header-wrap ul.main-menu > li > .omama-lang-pill {
+  margin-bottom: 10px;
+}
+
+header .omama-lang-codes {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  flex-wrap: nowrap;
+  gap: 7px;
+  min-width: 0;
+}
+
+header .omama-lang-codes button,
+header .omama-lang-codes a {
+  appearance: none;
+  background: none;
+  border: 0;
+  color: #fff;
+  cursor: pointer;
+  flex: 0 0 auto;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  opacity: 0.38;
+  padding: 0;
+  text-decoration: none;
+}
+
+header .omama-lang-codes button.active,
+header .omama-lang-codes a.active {
+  opacity: 1;
+}
+
+header .omama-lang-pill svg {
+  display: block;
+  flex-shrink: 0;
+  height: 18px;
+  width: 20px;
+}
+
+@media only screen and (max-width: 1023px) {
+  header .header-wrap > .omama-lang-pill {
+    display: none;
+  }
+}
+
+.omama-shots {
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.omama-shots .shot {
+  border-radius: 30px;
+  flex: 1;
+  min-height: 22vw;
+  overflow: hidden;
+}
+
+.omama-shots img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.gallery-wrap canvas {
+  display: block;
+}
+
+.js-modal[data-id="monday"] .modal-content {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: visible;
+}
+
+.js-modal[data-id="monday"] .omama-book-panel {
+  background: #f6f1ec;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.js-modal[data-id="monday"] .omama-book-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px 22px 18px;
+}
+
+.js-modal[data-id="monday"] .omama-book-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.js-modal[data-id="monday"] .omama-book-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.js-modal[data-id="monday"] .omama-book-field span {
+  color: #111;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.js-modal[data-id="monday"] .omama-book-field input,
+.js-modal[data-id="monday"] .omama-book-field select {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #111;
+  border-radius: 0;
+  color: #111;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 16px;
+  line-height: 1.2;
+  padding: 6px 0 10px;
+  width: 100%;
+}
+
+.js-modal[data-id="monday"] .omama-book-field input:focus,
+.js-modal[data-id="monday"] .omama-book-field select:focus {
+  outline: none;
+  border-bottom-color: #ab54f7;
+}
+
+.js-modal[data-id="monday"] .omama-book-code {
+  grid-column: 1 / -1;
+}
+
+.js-modal[data-id="monday"] .omama-book-submit {
+  align-self: stretch;
+  background: #ab54f7;
+  border: 0;
+  border-radius: 10px;
+  color: #111;
+  cursor: pointer;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  margin-top: 8px;
+  padding: 22px 24px;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.js-modal[data-id="monday"] .omama-book-edit {
+  background: transparent;
+  border: 0;
+  color: #111;
+  cursor: pointer;
+  display: none;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 0;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.js-modal[data-id="monday"] .omama-book-panel.is-results .omama-book-form {
+  padding: 14px 22px;
+}
+
+.js-modal[data-id="monday"] .omama-book-panel.is-results .omama-book-grid,
+.js-modal[data-id="monday"] .omama-book-panel.is-results .omama-book-submit {
+  display: none;
+}
+
+.js-modal[data-id="monday"] .omama-book-panel.is-results .omama-book-edit {
+  display: inline-flex;
+}
+
+.js-modal[data-id="monday"] .omama-book-results {
+  display: none;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 0 22px 28px;
+}
+
+.js-modal[data-id="monday"] .omama-book-panel.is-results .omama-book-results {
+  display: block;
+}
+
+.js-modal[data-id="monday"] .omama-book-summary,
+.js-modal[data-id="monday"] .omama-book-empty,
+.js-modal[data-id="monday"] .omama-book-note {
+  color: #111;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.js-modal[data-id="monday"] .omama-book-empty,
+.js-modal[data-id="monday"] .omama-book-note {
+  opacity: 0.7;
+}
+
+.js-modal[data-id="monday"] .omama-book-room {
+  border-top: 1px solid #111;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 92px 1fr;
+  padding: 18px 0;
+}
+
+.js-modal[data-id="monday"] .omama-book-photo {
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.js-modal[data-id="monday"] .omama-book-photo img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.js-modal[data-id="monday"] .omama-book-copy h3 {
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 18px;
+  letter-spacing: 0.08em;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+}
+
+.js-modal[data-id="monday"] .omama-book-copy p {
+  font-size: 13px;
+  line-height: 1.35;
+  margin: 0 0 8px;
+}
+
+.js-modal[data-id="monday"] .omama-book-meta {
+  opacity: 0.7;
+}
+
+.js-modal[data-id="monday"] .omama-book-price {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0 12px;
+}
+
+.js-modal[data-id="monday"] .omama-book-price span,
+.js-modal[data-id="monday"] .omama-book-price em {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.js-modal[data-id="monday"] .omama-book-price strong {
+  font-size: 20px;
+}
+
+.js-modal[data-id="monday"] .omama-book-go {
+  align-items: center;
+  background: #ab54f7;
+  border-radius: 10px;
+  color: #111;
+  display: flex;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  margin-top: 8px;
+  padding: 18px 22px;
+  text-transform: uppercase;
+  width: 100%;
+}
+
+.js-modal[data-id="monday"] .arrows-header {
+  justify-content: center;
+  padding: 28px 72px 22px;
+}
+
+.js-modal[data-id="monday"] .arrows-header svg {
+  display: none;
+}
+
+.js-modal[data-id="monday"] .arrows-header span {
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: clamp(36px, 3.4vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+
+.js-modal[data-id="monday"] .modal-header {
+  z-index: 5 !important;
+}
+
+.js-modal[data-id="monday"] .js-close-button {
+  display: none !important;
+}
+
+.js-modal[data-id="monday"] .omama-book-close {
+  align-items: center;
+  background: #ab54f7;
+  border: 0;
+  color: #111;
+  cursor: pointer;
+  display: flex;
+  height: 56px;
+  justify-content: center;
+  border-radius: 10px 0 0 10px;
+  position: absolute;
+  left: -54px;
+  top: 18px;
+  width: 56px;
+  z-index: 50;
+}
+
+.js-modal[data-id="monday"] .omama-book-close::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -8px;
+  width: 8px;
+  height: 56px;
+  background: #ab54f7;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.js-modal[data-id="monday"] .omama-book-close:hover {
+  background: #ab54f7;
+  color: #111;
+}
+
+.js-modal[data-id="monday"] .omama-book-close svg {
+  display: block;
+  height: 22px;
+  width: 22px;
+  position: relative;
+  z-index: 1;
+}
+
+.omama-eye-cursor {
+  height: 74px;
+  left: 0;
+  margin-left: -37px;
+  margin-top: -37px;
+  opacity: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  transition: opacity 0.25s ease;
+  width: 74px;
+  will-change: transform;
+  z-index: 99999;
+}
+
+.omama-eye-cursor svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.omama-eye-cursor.is-visible {
+  opacity: 1;
+}
+
+body.noscroll header .open-modal-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 1023px) {
+  .js-modal[data-id="monday"] .omama-book-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .js-modal[data-id="monday"] .omama-book-room {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .omama-shots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .omama-shots .shot {
+    min-height: 180px;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .single-unit section.meet-units .units-wrap {
+    align-items: start;
+    grid-template-columns: minmax(280px, 0.34fr) minmax(0, 1fr);
+  }
+
+  .single-unit section.meet-units .units-wrap .units-buttons {
+    position: sticky;
+    top: 20px;
+  }
+
+  .single-unit section.meet-units .units-wrap .units-buttons .unit-button {
+    padding: 10px 18px;
+  }
+
+  .single-unit section.meet-units .units-wrap .units-buttons .unit-button .title {
+    font-size: clamp(20px, 1.7vw, 30px);
+    line-height: 1.05;
+  }
+
+  .single-unit section.meet-units .units-wrap ul.units-items li.unit-item .gallery-wrap .swiper-slide img {
+    display: block;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    width: auto;
+  }
+}
+
+section.faqs {
+  grid-template-columns: minmax(0, 1fr) !important;
+  margin-bottom: var(--gap, 30px);
+}
+
+section.faqs .faq-group.open {
+  overflow: visible !important;
+}
+
+section.faqs .faq-group.open > .js-pane,
+section.faqs .faq-item.open > .js-pane {
+  clip-path: none !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+section.faqs .faq-item {
+  background: transparent;
+  border: 0 !important;
+  border-radius: 0 !important;
+  overflow: visible;
+}
+
+section.faqs .faq-item + .faq-item {
+  border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
+}
+
+section.faqs .faq-item button,
+section.faqs .faq-item .post_content {
+  padding: 14px 30px !important;
+}
+
+section.faqs .faq-item svg {
+  height: auto;
+  width: 28px;
+}
+
+section.faqs .faq-item.open {
+  background: transparent;
+}
+
+section.faqs .faq-group > .js-dropdown-button .post_title,
+section.faqs .faq-item .post_title {
+  margin-top: 0;
+}
+
+section.faqs .faq-group > .js-dropdown-button > div,
+section.faqs .faq-group > .js-dropdown-button > svg:not(.shape-overlays) {
+  position: relative;
+  z-index: 1;
+}
+
+section.faqs .faq-group > .js-dropdown-button svg.shape-overlays {
+  flex: none;
+  height: 100%;
+  left: 0;
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  transform: none !important;
+  width: 100%;
+  z-index: 0;
+}
+
+body.omama-request-page [data-name="newsletter"] {
+  display: none !important;
+}
+
+.omama-request {
+  align-items: center;
+  background: #f4e9e1;
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 40px);
+  padding: 5rem 1.5rem 6rem;
+}
+
+.omama-request-inner {
+  margin: 0 auto;
+  max-width: 36rem;
+  text-align: center;
+  width: 100%;
+}
+
+.omama-request .label {
+  display: inline-block;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 1.5rem;
+}
+
+.omama-request .title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+}
+
+.omama-request form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  margin-top: 2rem;
+}
+
+.omama-request label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-family: Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.omama-request input,
+.omama-request textarea {
+  background: #fff;
+  border: 2.5px solid #111;
+  border-radius: 10px;
+  font-family: Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 16px;
+  line-height: 1.4;
+  padding: 0.95rem 1rem;
+  width: 100%;
+}
+
+.omama-request input:focus,
+.omama-request textarea:focus {
+  border-color: #ab54f7;
+  outline: 2px solid #ab54f7;
+  outline-offset: 2px;
+}
+
+.omama-request textarea {
+  min-height: 10rem;
+  resize: vertical;
+}
+
+.omama-request .omama-request-submit {
+  align-self: center;
+  margin-top: 0.5rem;
+}
+
+[data-name="newsletter"] label.checkbox a,
+form.newsletter label.checkbox a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+footer .bottom-wrap a.omama-credit {
+  color: inherit;
+  text-decoration: none;
+}
+
+footer .bottom-wrap a.omama-credit .omama-credit-name {
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.omama-demo-note {
+  align-items: center;
+  background: #f4e9e1;
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 8rem 1.5rem 4rem;
+  text-align: center;
+}
+
+.omama-demo-note .inner {
+  max-width: 36rem;
+}
+
+.omama-demo-note .label {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+}
+
+.omama-demo-note .actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.omama-aosta-guide,
+.omama-aosta-services {
+  background: #f4e9e1;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+  padding: 4.5rem clamp(1.25rem, 5vw, 4.5rem) 3.5rem;
+}
+
+.strip-bar {
+  margin-bottom: 1.5rem;
+}
+
+/* Senza strip-bar in coda, l'ultima sezione toccherebbe la newsletter del footer. */
+article > section.spaces:last-child {
+  margin-bottom: 1.5rem;
+}
+
+section.map .info {
+  gap: 1.25rem;
+}
+
+section.map .info address {
+  margin-top: 0.75rem;
+}
+
+section.map .info .social {
+  margin-top: 0.5rem;
+  gap: 1rem;
+}
+
+header .social.desktop-social,
+header .social.background-black {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.9rem;
+  padding: 0.7rem 0.9rem;
+  width: fit-content;
+}
+
+header .social.desktop-social a,
+header .social.background-black a {
+  display: inline-flex;
+  line-height: 0;
+}
+
+header .header-wrap .open-modal-btn.button.background-purple-dark {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+  position: relative;
+  text-align: center;
+}
+
+header .header-wrap .open-modal-btn.button.background-purple-dark.js-color-button-fill > svg.shape-overlays {
+  inset: 0;
+  height: 100%;
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+}
+
+header .header-wrap .open-modal-btn.button.background-purple-dark.js-color-button-fill > span {
+  position: relative;
+  z-index: 1;
+}
+
+.omama-aosta-services {
+  padding-top: 0;
+}
+
+.omama-aosta-intro {
+  margin-bottom: 1.25rem;
+  max-width: 38rem;
+}
+
+.omama-aosta-photos {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 0 0 2.25rem;
+}
+
+.omama-aosta-photo {
+  border-radius: var(--border-radius);
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center;
+}
+
+.omama-aosta-intro .title {
+  margin: 0.85rem 0 1rem;
+}
+
+.omama-aosta-grid,
+.omama-aosta-service-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.omama-aosta-grid article,
+.omama-aosta-service-grid article {
+  min-height: 100%;
+  padding: 1.35rem 1.2rem 1.5rem;
+}
+
+.omama-aosta-grid article {
+  background: #fff;
+}
+
+.omama-aosta-walk {
+  display: block;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.85rem;
+  text-transform: uppercase;
+}
+
+.omama-aosta-grid h3,
+.omama-aosta-service-grid h3 {
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 0.65rem;
+}
+
+.omama-aosta-grid p,
+.omama-aosta-service-grid p {
+  font-size: 15px;
+  line-height: 1.35;
+  margin: 0;
+}
+
+@media only screen and (max-width: 1023px) {
+  .omama-aosta-grid,
+  .omama-aosta-service-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .omama-aosta-photos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media only screen and (max-width: 649px) {
+  .omama-aosta-grid,
+  .omama-aosta-service-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .omama-aosta-photos {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Section titles are real headings now. The theme has no heading reset, so the
+   browser default margins are neutralised; every other property keeps coming
+   from the typography utility class the element already had. Elements that ask
+   for their own spacing keep it. */
+.omama-heading:not([class*="mt-"]) {
+  margin-block-start: 0;
+}
+
+.omama-heading:not([class*="mb-"]) {
+  margin-block-end: 0;
+}
+
+.omama-visually-hidden {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* ---------------------------------------------------------------- Instagram wall
+   Curated posts rendered as blog-style rows: cover on the left, caption on the
+   right. Injected on the homepage after section.locations. */
+.omama-ig {
+  background: #f4e9e1;
+  border-radius: var(--border-radius);
+  margin: 0 0 1.5rem;
+  padding: clamp(2rem, 4vw, 3.5rem) clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.omama-ig-inner {
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+}
+
+.omama-ig-head {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: space-between;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.omama-ig-headings {
+  max-width: 40rem;
+}
+
+.omama-ig-eyebrow {
+  display: inline-block;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.omama-ig-title {
+  margin: 0.5rem 0 0.75rem;
+}
+
+.omama-ig-intro {
+  margin: 0;
+}
+
+.omama-ig-follow {
+  align-items: center;
+  background: #000;
+  border-radius: 12px;
+  color: #fff;
+  display: inline-flex;
+  flex-shrink: 0;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-weight: 800;
+  gap: 0.6rem;
+  letter-spacing: 0.04em;
+  padding: 0.95rem 1.3rem;
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+}
+
+.omama-ig-follow:hover {
+  background: #ab54f7;
+  color: #111;
+}
+
+.omama-ig-follow svg {
+  display: block;
+  height: 20px;
+  width: 20px;
+}
+
+/* Le card scorrono orizzontalmente su una sola riga; ognuna impila video e testo. */
+.omama-ig-scroll {
+  container-type: inline-size;
+  margin: 0 calc(-1 * clamp(0.75rem, 2vw, 1.25rem));
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+  overflow-y: visible;
+  overscroll-behavior-x: contain;
+  padding: 0 clamp(0.75rem, 2vw, 1.25rem) 0.35rem;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-color: rgba(17, 17, 17, 0.28) transparent;
+  scrollbar-width: thin;
+}
+
+.omama-ig-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.omama-ig-scroll::-webkit-scrollbar-thumb {
+  background: rgba(17, 17, 17, 0.22);
+  border-radius: 999px;
+}
+
+.omama-ig-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.omama-ig-list {
+  --omama-ig-card-gap: clamp(0.75rem, 1.2vw, 1rem);
+  --omama-ig-visible-cards: 3;
+  align-items: start;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: var(--omama-ig-card-gap);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: max-content;
+}
+
+.omama-ig-card {
+  --omama-ig-card-width: clamp(
+    280px,
+    calc(
+      (100cqi - (var(--omama-ig-visible-cards) - 1) * var(--omama-ig-card-gap)) /
+        var(--omama-ig-visible-cards)
+    ),
+    780px
+  );
+  background: #fff;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex: 0 0 var(--omama-ig-card-width);
+  flex-direction: column;
+  overflow: hidden;
+  scroll-snap-align: start;
+  width: var(--omama-ig-card-width);
+}
+
+.omama-ig-media {
+  aspect-ratio: 9 / 16;
+  background: #000;
+  display: block;
+  flex: 0 0 auto;
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.omama-ig-cover {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  width: 100%;
+}
+
+.omama-ig-toolbar {
+  bottom: 10px;
+  display: flex;
+  gap: 6px;
+  isolation: isolate;
+  left: 10px;
+  pointer-events: none;
+  position: absolute;
+  right: 10px;
+  z-index: 6;
+}
+
+.omama-ig-toolbar--gallery {
+  justify-content: flex-end;
+}
+
+.omama-ig-tool {
+  align-items: center;
+  background: rgba(244, 233, 225, 0.94);
+  border: 0;
+  border-radius: 999px;
+  color: #111;
+  cursor: pointer;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  min-width: 34px;
+  padding: 0 10px;
+  pointer-events: auto;
+}
+
+.omama-ig-tool:hover {
+  background: #ab54f7;
+  color: #111;
+}
+
+.omama-ig-tool svg {
+  display: block;
+  height: 16px;
+  width: 16px;
+}
+
+.omama-ig-tool--expand {
+  margin-left: auto;
+}
+
+.omama-ig-tool.is-muted .omama-ig-icon-sound-on,
+.omama-ig-tool:not(.is-muted) .omama-ig-icon-sound-off {
+  display: none;
+}
+
+.omama-ig-tool .omama-ig-icon-pause {
+  display: none;
+}
+
+.omama-ig-tool.is-playing .omama-ig-icon-play {
+  display: none;
+}
+
+.omama-ig-tool.is-playing .omama-ig-icon-pause {
+  display: block;
+}
+
+.omama-ig-media--gallery {
+  cursor: grab;
+  touch-action: pan-y pinch-zoom;
+}
+
+.omama-ig-media--gallery.is-swiping {
+  cursor: grabbing;
+  touch-action: none;
+}
+
+.omama-ig-slides {
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  position: relative;
+  width: 100%;
+  z-index: 0;
+}
+
+.omama-ig-slide {
+  height: 100%;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 0.35s ease;
+  width: 100%;
+  z-index: 0;
+}
+
+.omama-ig-slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+.omama-ig-slide img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  width: 100%;
+}
+
+body.omama-ig-viewer-open .omama-ig-card.is-viewer-source .omama-ig-slides {
+  visibility: hidden;
+}
+
+.omama-ig-nav {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.42);
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  height: 28px;
+  justify-content: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  z-index: 2;
+}
+
+.omama-ig-nav:hover {
+  background: rgba(171, 84, 247, 0.92);
+}
+
+.omama-ig-prev {
+  left: 8px;
+}
+
+.omama-ig-next {
+  right: 8px;
+}
+
+.omama-ig-prev::before,
+.omama-ig-next::before {
+  border-bottom: 5px solid transparent;
+  border-top: 5px solid transparent;
+  content: "";
+}
+
+.omama-ig-prev::before {
+  border-right: 7px solid #fff;
+  margin-right: 2px;
+}
+
+.omama-ig-next::before {
+  border-left: 7px solid #fff;
+  margin-left: 2px;
+}
+
+.omama-ig-dots {
+  bottom: 52px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  left: 0;
+  padding: 6px 10px;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+  z-index: 4;
+}
+
+.omama-ig-dot {
+  background: rgba(255, 255, 255, 0.55);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  height: 9px;
+  padding: 0;
+  pointer-events: auto;
+  width: 9px;
+}
+
+.omama-ig-dot.is-active {
+  background: #ab54f7;
+  transform: scale(1.15);
+}
+
+.omama-ig-stack {
+  background:
+    linear-gradient(#fff, #fff) padding-box,
+    linear-gradient(#fff, #fff) padding-box;
+  border: 1.5px solid #fff;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.35);
+  height: 14px;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 14px;
+  z-index: 2;
+}
+
+.omama-ig-stack::before {
+  border: 1.5px solid #fff;
+  border-radius: 4px;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.25);
+  content: "";
+  height: 14px;
+  position: absolute;
+  right: 4px;
+  top: -4px;
+  width: 14px;
+}
+
+/* Gallery cards no longer show the stack icon. */
+.omama-ig-media--gallery .omama-ig-stack {
+  display: none !important;
+}
+
+.omama-ig-media--gallery .omama-ig-nav {
+  background: rgba(0, 0, 0, 0.5);
+  height: 34px;
+  width: 34px;
+  z-index: 4;
+}
+
+.omama-ig-media--gallery .omama-ig-prev {
+  left: 8px;
+}
+
+.omama-ig-media--gallery .omama-ig-next {
+  right: 8px;
+}
+
+.omama-ig-badge {
+  align-items: center;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  pointer-events: none;
+  position: absolute;
+}
+
+.omama-ig-badge svg {
+  height: 58px;
+  width: 58px;
+}
+
+.omama-ig-body {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  padding: 0.7rem 0.8rem 0.85rem;
+}
+
+.omama-ig-top {
+  align-items: center;
+  display: flex;
+  gap: 0.45rem;
+  margin-bottom: 0.45rem;
+}
+
+.omama-ig-avatar {
+  border-radius: 50%;
+  flex-shrink: 0;
+  height: 28px;
+  overflow: hidden;
+  width: 28px;
+}
+
+.omama-ig-avatar img {
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.omama-ig-author {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.omama-ig-name {
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.omama-ig-handle {
+  color: #6c2fad;
+  font-size: 11px;
+}
+
+.omama-ig-caption {
+  flex: 0 0 auto;
+  max-height: 3.4rem;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 0.2rem;
+  scrollbar-width: thin;
+}
+
+.omama-ig-caption p {
+  font-size: 12px;
+  line-height: 1.35;
+  margin: 0 0 0.35rem;
+}
+
+.omama-ig-caption p:last-child {
+  margin-bottom: 0;
+}
+
+.omama-ig-tags {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  margin: 0.35rem 0 0.45rem;
+  max-height: 1.1rem;
+  overflow: hidden;
+}
+
+.omama-ig-tags a {
+  color: #6c2fad;
+  font-size: 11px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.omama-ig-tags a:hover {
+  text-decoration: underline;
+}
+
+.omama-ig-cta {
+  align-items: center;
+  align-self: center;
+  color: #111;
+  display: inline-flex;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  gap: 0.35rem;
+  letter-spacing: 0.04em;
+  margin-top: 0;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.omama-ig-cta svg {
+  height: 16px;
+  transition: transform 0.3s ease;
+  width: 16px;
+}
+
+.omama-ig-cta:hover svg {
+  transform: translate(3px, -3px);
+}
+
+@media only screen and (min-width: 650px) and (max-width: 999px) {
+  .omama-ig-list {
+    --omama-ig-visible-cards: 2.15;
+  }
+}
+
+@media only screen and (min-width: 1000px) and (max-width: 1499px) {
+  .omama-ig-list {
+    --omama-ig-visible-cards: 3;
+  }
+}
+
+@media only screen and (min-width: 1500px) and (max-width: 1999px) {
+  .omama-ig-list {
+    --omama-ig-visible-cards: 3.5;
+  }
+}
+
+@media only screen and (min-width: 2000px) {
+  .omama-ig-list {
+    --omama-ig-visible-cards: 4;
+  }
+}
+
+@media only screen and (max-width: 649px) {
+  .omama-ig-list {
+    --omama-ig-visible-cards: 1.12;
+  }
+
+  .omama-ig-card {
+    --omama-ig-card-width: min(88vw, 420px);
+    flex-basis: var(--omama-ig-card-width);
+    width: var(--omama-ig-card-width);
+  }
+
+  .omama-ig-media {
+    aspect-ratio: 9 / 16;
+    max-height: min(72vh, 640px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .omama-ig-cover,
+  .omama-ig-cta svg {
+    transition: none;
+  }
+}
+
+/* TikTok-style in-page viewer for Instagram reels (no browser fullscreen). */
+.omama-ig-viewer {
+  align-items: center;
+  display: none;
+  gap: clamp(8px, 1.5vw, 16px);
+  inset: 0;
+  justify-content: center;
+  padding: clamp(8px, 1.5vw, 16px);
+  position: fixed;
+  z-index: 100001;
+}
+
+.omama-ig-viewer.is-open {
+  display: flex;
+}
+
+.omama-ig-viewer-backdrop {
+  background: rgba(0, 0, 0, 0.84);
+  border: 0;
+  cursor: pointer;
+  inset: 0;
+  padding: 0;
+  position: absolute;
+}
+
+.omama-ig-viewer-post-nav {
+  align-items: center;
+  background: rgba(244, 233, 225, 0.14);
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  flex-shrink: 0;
+  height: 46px;
+  justify-content: center;
+  position: relative;
+  width: 46px;
+  z-index: 2;
+}
+
+.omama-ig-viewer-post-nav:hover {
+  background: rgba(244, 233, 225, 0.24);
+}
+
+.omama-ig-viewer-post-nav svg {
+  display: block;
+  height: 22px;
+  width: 22px;
+}
+
+.omama-ig-viewer-post-prev svg {
+  transform: rotate(180deg);
+}
+
+.omama-ig-viewer-stage {
+  aspect-ratio: 9 / 16;
+  background: #000;
+  border-radius: 18px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  height: auto;
+  isolation: isolate;
+  max-height: 96vh;
+  overflow: hidden;
+  position: relative;
+  width: min(820px, 92vw);
+  z-index: 1;
+}
+
+.omama-ig-viewer-video,
+.omama-ig-viewer-photo {
+  display: block;
+  height: 100%;
+  inset: 0;
+  object-fit: contain;
+  pointer-events: none;
+  position: absolute;
+  -webkit-user-drag: none;
+  user-select: none;
+  width: 100%;
+  z-index: 0;
+}
+
+.omama-ig-viewer-photo {
+  background: #000;
+}
+
+.omama-ig-viewer-dots {
+  bottom: 72px;
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 3;
+}
+
+.omama-ig-viewer-dots[hidden] {
+  display: none !important;
+}
+
+.omama-ig-viewer-controls[hidden] {
+  display: none !important;
+}
+
+.omama-ig-viewer-close {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.55);
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  width: 40px;
+  z-index: 3;
+}
+
+.omama-ig-viewer-close svg {
+  display: block;
+  height: 18px;
+  width: 18px;
+}
+
+.omama-ig-viewer-controls {
+  bottom: 16px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  left: 0;
+  position: absolute;
+  right: 0;
+  z-index: 3;
+}
+
+.omama-ig-viewer-btn {
+  align-items: center;
+  background: rgba(244, 233, 225, 0.96);
+  border: 0;
+  border-radius: 999px;
+  color: #111;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: Bunch, Alfabet, "Aeonik Pro", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  gap: 0.45rem;
+  letter-spacing: 0.06em;
+  min-height: 42px;
+  padding: 0 16px;
+  text-transform: uppercase;
+}
+
+.omama-ig-viewer-btn svg {
+  display: block;
+  flex-shrink: 0;
+  height: 16px;
+  width: 16px;
+}
+
+.omama-ig-viewer-btn.is-muted svg.omama-ig-icon-sound-on,
+.omama-ig-viewer-btn:not(.is-muted) svg.omama-ig-icon-sound-off {
+  display: none;
+}
+
+@media only screen and (min-width: 1100px) {
+  .omama-ig-viewer-stage {
+    width: min(960px, 58vw);
+  }
+}
+
+@media only screen and (min-width: 1500px) {
+  .omama-ig-viewer-stage {
+    width: min(1040px, 54vw);
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .omama-ig-viewer {
+    gap: 0;
+    padding: 0;
+  }
+
+  .omama-ig-viewer.is-open {
+    display: block;
+  }
+
+  .omama-ig-viewer-backdrop {
+    background: #000;
+  }
+
+  .omama-ig-viewer-stage {
+    aspect-ratio: auto;
+    border-radius: 0;
+    box-shadow: none;
+    height: 100dvh;
+    inset: 0;
+    max-height: none;
+    max-width: none;
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+  }
+
+  .omama-ig-viewer-video,
+  .omama-ig-viewer-photo {
+    object-fit: contain;
+  }
+
+  .omama-ig-viewer-post-nav {
+    height: 40px;
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    z-index: 3;
+  }
+
+  .omama-ig-viewer-post-prev {
+    left: 10px;
+  }
+
+  .omama-ig-viewer-post-next {
+    right: 10px;
+  }
+
+  .omama-ig-viewer-post-nav svg {
+    height: 18px;
+    width: 18px;
+  }
+
+  .omama-ig-viewer-close {
+    right: 14px;
+    top: 14px;
+    z-index: 4;
+  }
+}
+
+@media only screen and (max-width: 640px) {
+  .omama-ig-viewer-post-nav {
+    height: 40px;
+    width: 40px;
+  }
+
+  .omama-ig-viewer-post-nav svg {
+    height: 18px;
+    width: 18px;
+  }
+}

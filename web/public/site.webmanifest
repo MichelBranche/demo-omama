@@ -1,0 +1,29 @@
+{
+  "name": "OMAMA Social Hotel",
+  "short_name": "OMAMA",
+  "description": "Social hotel nel centro di Aosta: sei tipologie di camera disegnate da Chicco Margaroli, spazi condivisi e la cabinovia per Pila a 8 minuti.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "it",
+  "theme_color": "#AB54F7",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/icons/favicon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/favicon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+# Demo environment: crawling is disabled so this copy cannot compete
+# with the live site. Set indexable: true in scripts/seo/site.mjs and
+# rebuild to publish.
+User-agent: *
+Disallow: /
