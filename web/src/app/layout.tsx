@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Anybody, Outfit } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { SiteShell } from "@/components/SiteShell";
 import "./globals.css";
 
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="it" className={`${anybody.variable} ${outfit.variable}`}>
       <body>
         <SiteShell>{children}</SiteShell>
+        <Analytics />
       </body>
     </html>
   );
