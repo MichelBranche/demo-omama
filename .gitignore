@@ -3,6 +3,9 @@
 **/.next/
 **/out/
 **/build/
+# Vendored CDN libraries ship with the site, even when their path contains build/
+!web/public/cdn.jsdelivr.net/**/build/
+!web/public/cdn.jsdelivr.net/**/build/**
 **/.pnp
 **/.pnp.*
 **/.yarn/*
