@@ -2877,23 +2877,39 @@
     window.gsap.set(track, { x: 0, clearProps: "transform" });
     window.gsap.set(track, { x: 0 });
 
-    // end matches travel exactly — theme used distance+400 which left a dead pin
-    // zone then dumped the user into the footer.
-    window.gsap.to(track, {
-      x: -distance,
-      ease: "none",
+    var livingImgs = track.querySelectorAll(".image-wrap img.slow-anim, .image-wrap img.fast-anim");
+    livingImgs.forEach(function (img) {
+      window.gsap.set(img, {
+        clearProps: "x,xPercent",
+        scale: 1.2,
+        transformOrigin: "center center",
+      });
+    });
+
+    // One shared ScrollTrigger: track travel + image parallax stay 1:1 with scroll.
+    var tl = window.gsap.timeline({
       scrollTrigger: {
         trigger: pinWrap,
         start: "top top",
         end: function () {
           return "+=" + livingPinScrollDistance(track, pinWrap);
         },
-        scrub: 0.55,
+        scrub: true,
         pin: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
         fastScrollEnd: false,
       },
+    });
+
+    tl.to(track, { x: -distance, ease: "none" }, 0);
+
+    livingImgs.forEach(function (img) {
+      var isSlow = img.classList.contains("slow-anim");
+      // Opposite direction to the track so the photo "lags" inside its frame.
+      var from = isSlow ? -7 : -14;
+      var to = isSlow ? 7 : 14;
+      tl.fromTo(img, { xPercent: from }, { xPercent: to, ease: "none" }, 0);
     });
 
     pinWrap._omamaLivingPinDistance = distance;
@@ -2944,7 +2960,11 @@
 
     // Theme creates the pin in finalize — wait past that, then replace once.
     [700, 1600].forEach(function (delay) {
-      window.setTimeout(runWhenReady, delay);
+      window.setTimeout(function () {
+        runWhenReady();
+        // Vertical-section parallax after the living pin timeline exists.
+        window.setTimeout(initOmamaParallax, 80);
+      }, delay);
     });
 
     if (!window._omamaLivingPinResizeHook) {
@@ -3096,52 +3116,30 @@
     if (prefersReducedMotion()) return;
 
     omamaParallaxCtx = window.gsap.context(function () {
-      var pinWrap = document.querySelector(".pin-wrap");
-      var livingImgs = document.querySelectorAll(
-        "section.living .living-track .image-wrap img.slow-anim, section.living .living-track .image-wrap img.fast-anim"
-      );
-
-      // Horizontal living pin: images drift against the track travel.
-      if (pinWrap && livingImgs.length && !isMobileViewport()) {
-        livingImgs.forEach(function (img) {
-          var isSlow = img.classList.contains("slow-anim");
-          var from = isSlow ? -6 : -12;
-          var to = isSlow ? 6 : 12;
-          window.gsap.set(img, { scale: 1.18, transformOrigin: "center center" });
-          window.gsap.fromTo(
-            img,
-            { xPercent: from },
-            {
-              xPercent: to,
-              ease: "none",
-              scrollTrigger: {
-                trigger: pinWrap,
-                start: "top top",
-                end: "bottom bottom",
-                scrub: 0.65,
-              },
-            }
-          );
-        });
-      } else if (livingImgs.length && isMobileViewport()) {
-        // Mobile: soft vertical drift while the section scrolls past.
-        livingImgs.forEach(function (img) {
-          window.gsap.set(img, { scale: 1.12, transformOrigin: "center center" });
-          window.gsap.fromTo(
-            img,
-            { yPercent: -8 },
-            {
-              yPercent: 8,
-              ease: "none",
-              scrollTrigger: {
-                trigger: img.closest(".item") || img,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: true,
-              },
-            }
-          );
-        });
+      // Living desktop parallax lives inside calibrateHomeLivingPin's timeline
+      // so it stays locked to the horizontal pin scroll. Mobile only here.
+      if (isMobileViewport()) {
+        document
+          .querySelectorAll(
+            "section.living .living-track .image-wrap img.slow-anim, section.living .living-track .image-wrap img.fast-anim"
+          )
+          .forEach(function (img) {
+            window.gsap.set(img, { scale: 1.12, transformOrigin: "center center" });
+            window.gsap.fromTo(
+              img,
+              { yPercent: -8 },
+              {
+                yPercent: 8,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: img.closest(".item") || img,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true,
+                },
+              }
+            );
+          });
       }
 
       document.querySelectorAll("section.community .image-wrap img").forEach(function (img, index) {
@@ -3158,7 +3156,7 @@
               trigger: frame || img,
               start: "top bottom",
               end: "bottom top",
-              scrub: 0.7,
+              scrub: true,
             },
           }
         );
@@ -3177,7 +3175,7 @@
               trigger: img.parentElement || img,
               start: "top bottom",
               end: "bottom top",
-              scrub: 0.75,
+              scrub: true,
             },
           }
         );
