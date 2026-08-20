@@ -2969,47 +2969,23 @@
 
   function fixTypicalUnitGalleryDom() {
     document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
-      var root =
-        wrap.querySelector(":scope > .relative") ||
-        wrap.querySelector(":scope > div") ||
-        null;
-
-      if (root) {
-        root.style.setProperty("position", "absolute", "important");
-        root.style.setProperty("inset", "0", "important");
-        root.style.setProperty("width", "100%", "important");
-        root.style.setProperty("height", "100%", "important");
-        root.style.removeProperty("min-height");
-
-        var stage = root.querySelector(".fixed") || root.querySelector(":scope > div");
-        if (stage) {
-          stage.style.setProperty("position", "absolute", "important");
-          stage.style.setProperty("inset", "0", "important");
-          stage.style.setProperty("width", "100%", "important");
-          stage.style.setProperty("height", "100%", "important");
-          stage.style.setProperty("overflow", "hidden", "important");
-        }
-      }
-
-      var canvas = wrap.querySelector("canvas");
-      if (canvas) {
-        canvas.style.setProperty("width", "100%", "important");
-        canvas.style.setProperty("height", "100%", "important");
-        canvas.style.setProperty("display", "block", "important");
-        // Only hide mosaic when canvas has a real drawing buffer.
-        if (canvas.width > 2 && canvas.height > 2) {
-          wrap.classList.add("omama-typical-ready");
-        }
-        window.dispatchEvent(new Event("resize"));
-        return;
-      }
-
       ensureTypicalUnitFallback(wrap);
+
+      // Remove theme WebGL tunnel: on deploy it often mounts empty and covers the mosaic.
+      wrap.querySelectorAll("canvas").forEach(function (canvas) {
+        var root = canvas.closest(".relative") || canvas.parentElement;
+        try {
+          if (root && root.parentElement === wrap) root.remove();
+          else canvas.remove();
+        } catch (e) {}
+      });
+
+      wrap.classList.remove("omama-typical-ready");
     });
   }
 
   function ensureTypicalUnitFallback(wrap) {
-    if (!wrap || wrap.querySelector("canvas") || wrap.querySelector(".omama-typical-fallback")) return;
+    if (!wrap || wrap.querySelector(".omama-typical-fallback")) return;
 
     var urls = [];
     try {

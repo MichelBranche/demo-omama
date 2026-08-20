@@ -1141,8 +1141,11 @@ section.typical_unit .gallery-wrap > [class*="relative"] {
   height: 100% !important;
   inset: 0;
   max-height: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
   position: absolute !important;
   width: 100% !important;
+  z-index: 0 !important;
 }
 
 section.typical_unit .gallery-wrap .fixed,
@@ -1171,7 +1174,7 @@ section.typical_unit .gallery-wrap .press-cursor {
 
 /* Fallback mosaic when WebGL/canvas never mounts (some deploy GPUs / browsers) */
 section.typical_unit .gallery-wrap .omama-typical-fallback {
-  display: grid;
+  display: grid !important;
   gap: 4px;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
@@ -1179,18 +1182,13 @@ section.typical_unit .gallery-wrap .omama-typical-fallback {
   inset: 0;
   position: absolute;
   width: 100%;
-  z-index: 1;
+  z-index: 5;
 }
 
 section.typical_unit .gallery-wrap .omama-typical-fallback img {
   height: 100%;
   object-fit: cover;
   width: 100%;
-}
-
-/* Hide mosaic only when the 3D canvas is actually drawing (non-zero size). */
-section.typical_unit .gallery-wrap.omama-typical-ready .omama-typical-fallback {
-  display: none;
 }
 
 @media only screen and (min-width: 1024px) {
