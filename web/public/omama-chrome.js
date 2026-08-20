@@ -2853,6 +2853,20 @@
       });
   }
 
+  // Slight overscale gives the parallax room to travel without exposing frame edges,
+  // and transforms keep the whole effect on the compositor (no per-frame repaint).
+  var PARALLAX_SCALE = 1.16;
+
+  function prepParallaxImage(img) {
+    if (!img) return;
+    img.style.removeProperty("object-position");
+    img.style.objectFit = "cover";
+    img.style.width = "100%";
+    img.style.height = "100%";
+    var host = img.parentElement;
+    if (host) host.classList.add("omama-parallax-host");
+  }
+
   function calibrateHomeLivingPin(force) {
     if (isMobileViewport()) return;
     if (!window.gsap || !window.ScrollTrigger) return;
@@ -2879,11 +2893,7 @@
 
     var livingImgs = track.querySelectorAll(".image-wrap img.slow-anim, .image-wrap img.fast-anim");
     livingImgs.forEach(function (img) {
-      // Keep the frame shape intact: no scale/translate on the img box.
-      window.gsap.set(img, { clearProps: "x,y,xPercent,yPercent,scale,transform" });
-      img.style.objectFit = "cover";
-      img.style.width = "100%";
-      img.style.height = "100%";
+      prepParallaxImage(img);
     });
 
     // One shared ScrollTrigger: track travel + image parallax stay 1:1 with scroll.
@@ -2905,20 +2915,11 @@
     tl.to(track, { x: -distance, ease: "none" }, 0);
 
     livingImgs.forEach(function (img) {
-      var isSlow = img.classList.contains("slow-anim");
-      var from = isSlow ? 42 : 28;
-      var to = isSlow ? 58 : 72;
-      var proxy = { x: from };
-      img.style.objectPosition = from + "% 50%";
-      tl.to(
-        proxy,
-        {
-          x: to,
-          ease: "none",
-          onUpdate: function () {
-            img.style.objectPosition = proxy.x + "% 50%";
-          },
-        },
+      var shift = img.classList.contains("slow-anim") ? 3.5 : 6.5;
+      tl.fromTo(
+        img,
+        { xPercent: shift, scale: PARALLAX_SCALE },
+        { xPercent: -shift, scale: PARALLAX_SCALE, ease: "none", force3D: true },
         0
       );
     });
@@ -3054,10 +3055,68 @@
       canvas.style.setProperty("width", "100%", "important");
       canvas.style.setProperty("height", "100%", "important");
 
-      // Theme WS.handleResize reads mountElement.clientWidth/Height on window resize,
-      // which is what repairs a renderer that was sized before layout settled.
-      if (wrap.clientWidth > 0 && wrap.clientHeight > 0 && canvas.width < wrap.clientWidth) {
-        window.dispatchEvent(new Event("resize"));
+      syncTypicalUnitCanvas(wrap, canvas);
+      parkTypicalUnitWhenOffscreen(wrap);
+    });
+  }
+
+  // Theme WS.handleResize reads mountElement.clientWidth/Height on window resize,
+  // which is what repairs a renderer sized before layout settled. Only ask for it
+  // when the box really changed — a stray resize event restarts every ScrollTrigger.
+  function syncTypicalUnitCanvas(wrap, canvas) {
+    if (!canvas || wrap.clientWidth < 1 || wrap.clientHeight < 1) return;
+    var box = wrap.clientWidth + "x" + wrap.clientHeight;
+    if (wrap._omamaCanvasBox === box && canvas.width >= wrap.clientWidth) return;
+    wrap._omamaCanvasBox = box;
+    window.dispatchEvent(new Event("resize"));
+  }
+
+  // The theme's render loop never stops. Shrinking the drawing buffer while the
+  // tunnel is far from the viewport makes each frame nearly free; the buffer is
+  // restored well before it scrolls back into view.
+  // Clipping rasterization to a couple of pixels costs nothing to switch either way:
+  // resizing the drawing buffer would reallocate it, and dispatching a window resize
+  // would make ScrollTrigger refresh every trigger on the page. The buffer keeps the
+  // last full frame, so there is nothing to restore when it comes back.
+  function setTypicalUnitParked(wrap, parked) {
+    var canvas = wrap.querySelector("canvas");
+    if (!canvas || !!wrap._omamaParked === !!parked) return;
+
+    var gl = wrap._omamaGl;
+    if (!gl) {
+      try {
+        gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+      } catch (e) {}
+      if (!gl) return;
+      wrap._omamaGl = gl;
+    }
+
+    wrap._omamaParked = !!parked;
+    if (parked) {
+      gl.enable(gl.SCISSOR_TEST);
+      gl.scissor(0, 0, 2, 2);
+    } else {
+      gl.disable(gl.SCISSOR_TEST);
+    }
+  }
+
+  function parkTypicalUnitWhenOffscreen(wrap) {
+    if (wrap._omamaParkIo || typeof IntersectionObserver === "undefined") return;
+    wrap._omamaParkIo = true;
+
+    new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          setTypicalUnitParked(wrap, !entry.isIntersecting);
+        });
+      },
+      { rootMargin: "300px 0px" }
+    ).observe(wrap);
+
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) setTypicalUnitParked(wrap, true);
+      else if (wrap.getBoundingClientRect().top < window.innerHeight + 300) {
+        setTypicalUnitParked(wrap, false);
       }
     });
   }
@@ -3067,21 +3126,19 @@
     document.documentElement._omamaTypicalWatch = true;
 
     if (typeof MutationObserver !== "undefined") {
+      var pending = 0;
       var obs = new MutationObserver(function () {
-        if (!document.querySelector("section.typical_unit .gallery-wrap")) return;
-        fixTypicalUnitGalleryDom();
+        var wrap = document.querySelector("section.typical_unit .gallery-wrap");
+        // Only care about the mount moment; styling is idempotent afterwards.
+        if (!wrap || wrap._omamaTypicalReady) return;
+        if (wrap.querySelector("canvas")) wrap._omamaTypicalReady = true;
+        if (pending) return;
+        pending = window.setTimeout(function () {
+          pending = 0;
+          fixTypicalUnitGalleryDom();
+        }, 200);
       });
       obs.observe(document.body, { childList: true, subtree: true });
-    }
-
-    if (typeof ResizeObserver !== "undefined") {
-      document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
-        if (wrap._omamaTypicalRo) return;
-        wrap._omamaTypicalRo = true;
-        new ResizeObserver(function () {
-          if (wrap.querySelector("canvas")) window.dispatchEvent(new Event("resize"));
-        }).observe(wrap);
-      });
     }
   }
 
@@ -3127,27 +3184,25 @@
     if (prefersReducedMotion()) return;
 
     omamaParallaxCtx = window.gsap.context(function () {
-      function scrubObjectPosition(img, trigger, fromX, toX, fromY, toY) {
-        window.gsap.set(img, { clearProps: "x,y,xPercent,yPercent,scale,transform" });
-        img.style.objectFit = "cover";
-        img.style.width = "100%";
-        img.style.height = "100%";
-        var proxy = { x: fromX, y: fromY };
-        img.style.objectPosition = fromX + "% " + fromY + "%";
-        window.gsap.to(proxy, {
-          x: toX,
-          y: toY,
-          ease: "none",
-          scrollTrigger: {
-            trigger: trigger,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
-          onUpdate: function () {
-            img.style.objectPosition = proxy.x + "% " + proxy.y + "%";
-          },
-        });
+      function scrubShift(img, trigger, shiftX, shiftY) {
+        prepParallaxImage(img);
+        window.gsap.fromTo(
+          img,
+          { xPercent: shiftX, yPercent: shiftY, scale: PARALLAX_SCALE },
+          {
+            xPercent: -shiftX,
+            yPercent: -shiftY,
+            scale: PARALLAX_SCALE,
+            ease: "none",
+            force3D: true,
+            scrollTrigger: {
+              trigger: trigger,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          }
+        );
       }
 
       // Living desktop parallax lives inside calibrateHomeLivingPin's timeline.
@@ -3157,33 +3212,18 @@
             "section.living .living-track .image-wrap img.slow-anim, section.living .living-track .image-wrap img.fast-anim"
           )
           .forEach(function (img) {
-            scrubObjectPosition(img, img.closest(".item") || img, 50, 50, 35, 65);
+            scrubShift(img, img.closest(".item") || img, 0, 6);
           });
       }
 
       document.querySelectorAll("section.community .image-wrap img").forEach(function (img, index) {
         var frame = img.closest(".image-wrap");
-        if (frame) frame.classList.add("omama-parallax-host");
-        scrubObjectPosition(
-          img,
-          frame || img,
-          index % 2 === 0 ? 45 : 55,
-          index % 2 === 0 ? 55 : 45,
-          30,
-          70
-        );
+        scrubShift(img, frame || img, index % 2 === 0 ? -3 : 3, 6.5);
       });
 
       document.querySelectorAll(".omama-aosta-photo").forEach(function (img, index) {
         ensureParallaxFrame(img, "omama-aosta-photo-frame");
-        scrubObjectPosition(
-          img,
-          img.parentElement || img,
-          50,
-          50,
-          index === 1 ? 28 : 38,
-          index === 1 ? 72 : 62
-        );
+        scrubShift(img, img.parentElement || img, 0, index === 1 ? 7 : 5.5);
       });
     });
   }
@@ -3191,6 +3231,111 @@
   function scheduleOmamaParallax() {
     [200, 900, 1800].forEach(function (delay) {
       window.setTimeout(initOmamaParallax, delay);
+    });
+  }
+
+  // Marquees and the looping SVG glyphs animate non-composited properties, so every
+  // frame costs style + layout + paint even when the section sits far off screen.
+  function loopHostElement(anim) {
+    var targets = [];
+
+    function collect(node) {
+      if (typeof node.targets === "function") {
+        try {
+          targets = targets.concat(node.targets());
+        } catch (e) {}
+      }
+      if (typeof node.getChildren === "function") {
+        node.getChildren(true, true, true).forEach(collect);
+      }
+    }
+
+    collect(anim);
+
+    for (var i = 0; i < targets.length; i += 1) {
+      var target = targets[i];
+      if (!target || target.nodeType !== 1 || !target.parentElement) continue;
+      // Never observe the animated element itself: marquee items travel out of the
+      // viewport by design, and SVG shapes often report an empty box. The enclosing
+      // section is what actually tells us whether the loop can be seen.
+      var host = target.parentElement.closest("section, footer, header, .pin-wrap");
+      if (!host) host = target.parentElement;
+      var box = host.getBoundingClientRect();
+      if (box.width < 1 || box.height < 1) continue;
+      return host;
+    }
+    return null;
+  }
+
+  var lastScrollAt = 0;
+
+  function trackScrollActivity() {
+    if (document.documentElement._omamaScrollClock) return;
+    document.documentElement._omamaScrollClock = true;
+    window.addEventListener(
+      "scroll",
+      function () {
+        lastScrollAt = Date.now();
+      },
+      { passive: true }
+    );
+  }
+
+  function pauseLoopWhenQuiet(anim) {
+    window.clearTimeout(anim._omamaLoopTimer);
+    anim._omamaLoopTimer = window.setTimeout(function () {
+      if (anim._omamaLoopPaused || anim.paused()) return;
+      // Pausing drops the element's compositor layer, so doing it mid-scroll costs
+      // more than it saves. Wait for a quiet moment, then stand the loop down.
+      if (Date.now() - lastScrollAt < 500) {
+        pauseLoopWhenQuiet(anim);
+        return;
+      }
+      anim._omamaLoopPaused = true;
+      anim.pause();
+    }, 600);
+  }
+
+  function watchOffscreenLoops() {
+    if (!window.gsap || typeof IntersectionObserver === "undefined") return;
+    trackScrollActivity();
+
+    var loops;
+    try {
+      loops = window.gsap.globalTimeline.getChildren(true, true, true);
+    } catch (e) {
+      return;
+    }
+
+    loops.forEach(function (anim) {
+      if (!anim || !anim.vars || anim.vars.repeat !== -1 || anim._omamaLoopWatched) return;
+      var host = loopHostElement(anim);
+      if (!host) return;
+      anim._omamaLoopWatched = true;
+
+      new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            window.clearTimeout(anim._omamaLoopTimer);
+
+            if (entry.isIntersecting) {
+              if (!anim._omamaLoopPaused) return;
+              anim._omamaLoopPaused = false;
+              anim.play();
+              return;
+            }
+
+            pauseLoopWhenQuiet(anim);
+          });
+        },
+        { rootMargin: "400px 0px" }
+      ).observe(host);
+    });
+  }
+
+  function scheduleOffscreenLoopWatch() {
+    [1500, 3200, 6000].forEach(function (delay) {
+      window.setTimeout(watchOffscreenLoops, delay);
     });
   }
 
@@ -3248,6 +3393,7 @@
     scheduleTypicalUnitGalleryFix();
     scheduleHomeLivingPinCalibration();
     scheduleOmamaParallax();
+    scheduleOffscreenLoopWatch();
   }
 
   function scheduleIgBootRetries() {
@@ -3481,12 +3627,14 @@
     scheduleTypicalUnitGalleryFix();
     scheduleHomeLivingPinCalibration();
     scheduleOmamaParallax();
+    scheduleOffscreenLoopWatch();
 
     window.addEventListener("load", function () {
       scheduleThemeScrollRefresh();
       scheduleTypicalUnitGalleryFix();
       scheduleHomeLivingPinCalibration();
       scheduleOmamaParallax();
+      scheduleOffscreenLoopWatch();
     });
   }
 

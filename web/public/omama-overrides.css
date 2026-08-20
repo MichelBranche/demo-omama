@@ -1836,23 +1836,38 @@ header .header-wrap .open-modal-btn.button.background-purple-dark.js-color-butto
   width: 100%;
 }
 
-/* Soft parallax hosts — crop shifts via object-position; frames keep their shape */
+/* Soft parallax hosts — the frame owns the shape and gets its own layer so it can
+   clip a composited child: that keeps the rounded mask intact while the image moves
+   on the compositor instead of repainting every frame. */
 section.living .living-track .item-list .item .image-wrap,
 section.community .image-wrap,
-.omama-aosta-photo-frame {
+.omama-aosta-photo-frame,
+.omama-parallax-host {
   border-radius: var(--border-radius);
   overflow: hidden;
+  isolation: isolate;
   transform: translateZ(0);
 }
 
 section.living .living-track .item-list .item .image-wrap img,
 section.community .image-wrap img,
-.omama-aosta-photo-frame img {
+.omama-aosta-photo-frame img,
+.omama-parallax-host img {
+  backface-visibility: hidden;
+  border-radius: 0;
   display: block;
   height: 100%;
   object-fit: cover;
-  transform: none !important;
   width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  section.living .living-track .item-list .item .image-wrap img,
+  section.community .image-wrap img,
+  .omama-aosta-photo-frame img,
+  .omama-parallax-host img {
+    transform: none !important;
+  }
 }
 
 .omama-cta360-img {
