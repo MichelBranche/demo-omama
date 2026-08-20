@@ -472,12 +472,20 @@
     root._cta360Img.src = src;
     root.style.display = "flex";
     root.setAttribute("aria-hidden", "false");
+    bindCta360Parallax(root._cta360Img);
     document.body.classList.add("noscroll");
   }
 
   function closeCta360Modal() {
     if (!cta360Modal) return;
-    if (cta360Modal._cta360Img) cta360Modal._cta360Img.src = "";
+    if (cta360Modal._cta360Img) {
+      if (window.gsap) {
+        try {
+          window.gsap.set(cta360Modal._cta360Img, { clearProps: "x,y,scale,opacity" });
+        } catch (e) {}
+      }
+      cta360Modal._cta360Img.src = "";
+    }
     cta360Modal.style.display = "none";
     cta360Modal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("noscroll");
@@ -3054,6 +3062,172 @@
     });
   }
 
+  var omamaParallaxCtx = null;
+  var cta360ParallaxBound = false;
+
+  function prefersReducedMotion() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
+  function killOmamaParallax() {
+    if (omamaParallaxCtx && typeof omamaParallaxCtx.revert === "function") {
+      try {
+        omamaParallaxCtx.revert();
+      } catch (e) {}
+    }
+    omamaParallaxCtx = null;
+  }
+
+  function ensureParallaxFrame(img, frameClass) {
+    if (!img || !img.parentNode) return null;
+    if (img.parentElement && img.parentElement.classList.contains(frameClass)) {
+      return img.parentElement;
+    }
+    var frame = document.createElement("div");
+    frame.className = frameClass;
+    img.parentNode.insertBefore(frame, img);
+    frame.appendChild(img);
+    return frame;
+  }
+
+  function initOmamaParallax() {
+    killOmamaParallax();
+    if (!window.gsap || !window.ScrollTrigger) return;
+    if (prefersReducedMotion()) return;
+
+    omamaParallaxCtx = window.gsap.context(function () {
+      var pinWrap = document.querySelector(".pin-wrap");
+      var livingImgs = document.querySelectorAll(
+        "section.living .living-track .image-wrap img.slow-anim, section.living .living-track .image-wrap img.fast-anim"
+      );
+
+      // Horizontal living pin: images drift against the track travel.
+      if (pinWrap && livingImgs.length && !isMobileViewport()) {
+        livingImgs.forEach(function (img) {
+          var isSlow = img.classList.contains("slow-anim");
+          var from = isSlow ? -6 : -12;
+          var to = isSlow ? 6 : 12;
+          window.gsap.set(img, { scale: 1.18, transformOrigin: "center center" });
+          window.gsap.fromTo(
+            img,
+            { xPercent: from },
+            {
+              xPercent: to,
+              ease: "none",
+              scrollTrigger: {
+                trigger: pinWrap,
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 0.65,
+              },
+            }
+          );
+        });
+      } else if (livingImgs.length && isMobileViewport()) {
+        // Mobile: soft vertical drift while the section scrolls past.
+        livingImgs.forEach(function (img) {
+          window.gsap.set(img, { scale: 1.12, transformOrigin: "center center" });
+          window.gsap.fromTo(
+            img,
+            { yPercent: -8 },
+            {
+              yPercent: 8,
+              ease: "none",
+              scrollTrigger: {
+                trigger: img.closest(".item") || img,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true,
+              },
+            }
+          );
+        });
+      }
+
+      document.querySelectorAll("section.community .image-wrap img").forEach(function (img, index) {
+        var frame = img.closest(".image-wrap");
+        if (frame) frame.classList.add("omama-parallax-host");
+        window.gsap.set(img, { scale: 1.16, transformOrigin: "center center" });
+        window.gsap.fromTo(
+          img,
+          { yPercent: index % 2 === 0 ? -10 : -6 },
+          {
+            yPercent: index % 2 === 0 ? 10 : 6,
+            ease: "none",
+            scrollTrigger: {
+              trigger: frame || img,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.7,
+            },
+          }
+        );
+      });
+
+      document.querySelectorAll(".omama-aosta-photo").forEach(function (img, index) {
+        ensureParallaxFrame(img, "omama-aosta-photo-frame");
+        window.gsap.set(img, { scale: 1.18, transformOrigin: "center center" });
+        window.gsap.fromTo(
+          img,
+          { yPercent: index === 1 ? -12 : -7 },
+          {
+            yPercent: index === 1 ? 12 : 7,
+            ease: "none",
+            scrollTrigger: {
+              trigger: img.parentElement || img,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.75,
+            },
+          }
+        );
+      });
+    });
+  }
+
+  function scheduleOmamaParallax() {
+    [200, 900, 1800].forEach(function (delay) {
+      window.setTimeout(initOmamaParallax, delay);
+    });
+  }
+
+  function bindCta360Parallax(img) {
+    if (!img || prefersReducedMotion()) return;
+    if (!window.gsap) return;
+
+    window.gsap.fromTo(
+      img,
+      { scale: 1.06, y: 18, opacity: 0.85 },
+      { scale: 1, y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }
+    );
+
+    if (cta360ParallaxBound) return;
+    cta360ParallaxBound = true;
+
+    var root = ensureCta360Modal();
+    if (!root) return;
+
+    root.addEventListener("mousemove", function (e) {
+      if (!root._cta360Img || root.style.display === "none") return;
+      if (prefersReducedMotion()) return;
+      var rect = root.getBoundingClientRect();
+      var nx = (e.clientX - rect.left) / rect.width - 0.5;
+      var ny = (e.clientY - rect.top) / rect.height - 0.5;
+      window.gsap.to(root._cta360Img, {
+        x: nx * 28,
+        y: ny * 18,
+        duration: 0.55,
+        ease: "power2.out",
+        overwrite: "auto",
+      });
+    });
+
+    root.addEventListener("mouseleave", function () {
+      if (!root._cta360Img) return;
+      window.gsap.to(root._cta360Img, { x: 0, y: 0, duration: 0.6, ease: "power2.out" });
+    });
+  }
+
   function afterBarbaPage() {
     applyLang(currentLang());
     bootMaps();
@@ -3070,6 +3244,7 @@
     scheduleThemeScrollRefresh();
     scheduleTypicalUnitGalleryFix();
     scheduleHomeLivingPinCalibration();
+    scheduleOmamaParallax();
   }
 
   function scheduleIgBootRetries() {
@@ -3302,11 +3477,13 @@
     scheduleThemeScrollRefresh();
     scheduleTypicalUnitGalleryFix();
     scheduleHomeLivingPinCalibration();
+    scheduleOmamaParallax();
 
     window.addEventListener("load", function () {
       scheduleThemeScrollRefresh();
       scheduleTypicalUnitGalleryFix();
       scheduleHomeLivingPinCalibration();
+      scheduleOmamaParallax();
     });
   }
 

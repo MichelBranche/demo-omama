@@ -1814,6 +1814,13 @@ header .header-wrap .open-modal-btn.button.background-purple-dark.js-color-butto
   margin: 0 0 2.25rem;
 }
 
+.omama-aosta-photo-frame {
+  border-radius: var(--border-radius);
+  display: block;
+  overflow: hidden;
+  width: 100%;
+}
+
 .omama-aosta-photo {
   border-radius: var(--border-radius);
   display: block;
@@ -1821,6 +1828,34 @@ header .header-wrap .open-modal-btn.button.background-purple-dark.js-color-butto
   aspect-ratio: 4 / 3;
   object-fit: cover;
   object-position: center;
+}
+
+.omama-aosta-photo-frame .omama-aosta-photo {
+  border-radius: 0;
+  height: 100%;
+  width: 100%;
+}
+
+/* Soft parallax hosts — keep overflow clipped while images scale/drift */
+section.living .living-track .item-list .item .image-wrap img,
+section.community .image-wrap img,
+.omama-aosta-photo-frame img {
+  will-change: transform;
+}
+
+.omama-cta360-img {
+  transform-origin: center center;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  section.living .living-track .item-list .item .image-wrap img,
+  section.community .image-wrap img,
+  .omama-aosta-photo-frame img,
+  .omama-cta360-img {
+    transform: none !important;
+    will-change: auto;
+  }
 }
 
 .omama-aosta-intro .title {
