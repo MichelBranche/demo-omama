@@ -1113,60 +1113,93 @@ header .omama-lang-pill svg {
   display: block;
 }
 
-/* typical_unit Three.js tunnel: theme injects Tailwind utility classes that are
-   not shipped in fjkg6.css — without explicit height the scroll root collapses. */
-section.typical_unit .gallery-wrap > .relative {
-  height: 10000vh;
+/* typical_unit Three.js gallery
+   Theme injects Tailwind-only classes (h-[10000vh], fixed, inset-0) that are
+   NOT in fjkg6.css. Without these rules the canvas collapses to 0 and you only
+   see the empty placeholder square — common on deploy. */
+section.typical_unit .gallery-wrap {
+  align-self: stretch;
+  background: #1a1a1a;
+  display: block !important;
+  height: 100%;
+  min-height: 350px;
   position: relative;
-  transition: background-color 0.7s ease;
-  width: 100%;
-}
-
-section.typical_unit .gallery-wrap > .relative > .fixed {
-  height: 100%;
-  inset: 0;
-  overflow: hidden;
-  position: fixed;
-  width: 100%;
-  z-index: 0;
-}
-
-section.typical_unit .gallery-wrap > .relative canvas,
-section.typical_unit .gallery-wrap canvas {
-  display: block;
-  height: 100%;
-  width: 100%;
-}
-
-section.typical_unit .gallery-wrap:has(canvas):before {
-  display: none;
-}
-
-section.typical_unit .gallery-wrap .press-cursor {
-  opacity: 0;
-  pointer-events: none;
-  position: fixed;
-  transform: translate(-50%, -50%);
-  z-index: 9999;
 }
 
 @media only screen and (min-width: 1024px) {
+  section.typical_unit .gallery-wrap {
+    min-height: 830px;
+  }
+}
+
+section.typical_unit .gallery-wrap:before {
+  display: none !important;
+}
+
+section.typical_unit .gallery-wrap > .relative,
+section.typical_unit .gallery-wrap > [class*="relative"] {
+  height: 100% !important;
+  inset: 0;
+  max-height: none !important;
+  position: absolute !important;
+  width: 100% !important;
+}
+
+section.typical_unit .gallery-wrap .fixed,
+section.typical_unit .gallery-wrap [class*="fixed"] {
+  height: 100% !important;
+  inset: 0 !important;
+  left: 0 !important;
+  overflow: hidden !important;
+  position: absolute !important;
+  top: 0 !important;
+  width: 100% !important;
+  z-index: 0;
+}
+
+section.typical_unit .gallery-wrap canvas {
+  display: block !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: cover;
+  width: 100% !important;
+}
+
+section.typical_unit .gallery-wrap .press-cursor {
+  display: none !important;
+}
+
+/* Fallback mosaic when WebGL/canvas never mounts (some deploy GPUs / browsers) */
+section.typical_unit .gallery-wrap .omama-typical-fallback {
+  display: grid;
+  gap: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  height: 100%;
+  inset: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+section.typical_unit .gallery-wrap .omama-typical-fallback img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+section.typical_unit .gallery-wrap:has(canvas) .omama-typical-fallback {
+  display: none;
+}
+
+@media only screen and (min-width: 1024px) {
+  /* Keep horizontal living pin from spilling and fighting native page scroll */
   .pin-wrap {
-    overflow: visible;
+    overflow: hidden;
   }
 
   section.living .living-track {
     will-change: transform;
-  }
-
-  body.template-way-of-living .total-scroll {
-    height: calc(100vh - 50px);
-    overflow-x: hidden;
-    overscroll-behavior: none;
-  }
-
-  body.template-way-of-living .scroll-wrap {
-    height: 100%;
   }
 }
 

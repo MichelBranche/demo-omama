@@ -2823,12 +2823,145 @@
     });
   }
 
+  function livingPinScrollDistance(track, pinWrap) {
+    if (!track) return 0;
+    // Measure overflow against the pinned container, not window.innerWidth
+    // (sidebar + padding made the theme formula end early → snap to footer).
+    var visible = pinWrap && pinWrap.clientWidth ? pinWrap.clientWidth : window.innerWidth;
+    return Math.max(0, Math.round(track.scrollWidth - visible));
+  }
+
+  function killHomeLivingPinTriggers() {
+    if (!window.ScrollTrigger || typeof window.ScrollTrigger.getAll !== "function") return;
+    window.ScrollTrigger.getAll()
+      .slice()
+      .forEach(function (st) {
+        var trigger = st.trigger;
+        var node = typeof trigger === "string" ? document.querySelector(trigger) : trigger;
+        if (!node || !node.classList || !node.classList.contains("pin-wrap")) return;
+        try {
+          st.kill(true);
+        } catch (e) {}
+      });
+  }
+
+  function calibrateHomeLivingPin(force) {
+    if (isMobileViewport()) return;
+    if (!window.gsap || !window.ScrollTrigger) return;
+
+    var track = document.querySelector("section.living .living-track");
+    var pinWrap = document.querySelector(".pin-wrap");
+    if (!track || !pinWrap) return;
+
+    var distance = livingPinScrollDistance(track, pinWrap);
+    if (distance < 80) return;
+
+    // Skip no-op recalibrations (avoids the “impazzisce” loop when stopping mid-section).
+    if (
+      !force &&
+      pinWrap._omamaLivingPinDistance &&
+      Math.abs(pinWrap._omamaLivingPinDistance - distance) < 40
+    ) {
+      return;
+    }
+
+    killHomeLivingPinTriggers();
+    window.gsap.set(track, { x: 0, clearProps: "transform" });
+    window.gsap.set(track, { x: 0 });
+
+    // end matches travel exactly — theme used distance+400 which left a dead pin
+    // zone then dumped the user into the footer.
+    window.gsap.to(track, {
+      x: -distance,
+      ease: "none",
+      scrollTrigger: {
+        trigger: pinWrap,
+        start: "top top",
+        end: function () {
+          return "+=" + livingPinScrollDistance(track, pinWrap);
+        },
+        scrub: 0.55,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        fastScrollEnd: false,
+      },
+    });
+
+    pinWrap._omamaLivingPinDistance = distance;
+
+    try {
+      window.ScrollTrigger.refresh();
+    } catch (e) {}
+  }
+
+  function scheduleHomeLivingPinCalibration() {
+    if (isMobileViewport() || !document.querySelector("section.living .living-track")) return;
+
+    function runWhenReady() {
+      var track = document.querySelector("section.living .living-track");
+      if (!track) return;
+
+      var imgs = track.querySelectorAll("img");
+      var pending = 0;
+      imgs.forEach(function (img) {
+        if (!img.complete) pending += 1;
+      });
+
+      function go() {
+        // Wait one frame so layout/scrollWidth is final.
+        window.requestAnimationFrame(function () {
+          calibrateHomeLivingPin(true);
+        });
+      }
+
+      if (!pending) {
+        go();
+        return;
+      }
+
+      var left = pending;
+      function onDone() {
+        left -= 1;
+        if (left <= 0) go();
+      }
+      imgs.forEach(function (img) {
+        if (!img.complete) {
+          img.addEventListener("load", onDone, { once: true });
+          img.addEventListener("error", onDone, { once: true });
+        }
+      });
+      window.setTimeout(go, 3500);
+    }
+
+    // Theme creates the pin in finalize — wait past that, then replace once.
+    [700, 1600].forEach(function (delay) {
+      window.setTimeout(runWhenReady, delay);
+    });
+
+    if (!window._omamaLivingPinResizeHook) {
+      window._omamaLivingPinResizeHook = true;
+      var resizeTimer = null;
+      var lastW = window.innerWidth;
+      window.addEventListener("resize", function () {
+        if (isMobileViewport()) return;
+        if (Math.abs(window.innerWidth - lastW) < 48) return;
+        lastW = window.innerWidth;
+        clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () {
+          calibrateHomeLivingPin(true);
+        }, 280);
+      });
+    }
+  }
+
   function scheduleThemeScrollRefresh() {
-    [0, 200, 500, 1000, 2000, 4000].forEach(function (delay) {
+    // One soft refresh after images settle — never rebuild pins or spam refresh(true).
+    [800, 1800].forEach(function (delay) {
       window.setTimeout(function () {
         if (!window.ScrollTrigger || typeof window.ScrollTrigger.refresh !== "function") return;
         try {
-          window.ScrollTrigger.refresh(true);
+          window.ScrollTrigger.refresh();
         } catch (e) {}
       }, delay);
     });
@@ -2836,162 +2969,97 @@
 
   function fixTypicalUnitGalleryDom() {
     document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
-      var root = wrap.querySelector(":scope > .relative");
-      if (!root) return;
+      var root =
+        wrap.querySelector(":scope > .relative") ||
+        wrap.querySelector(":scope > div") ||
+        null;
 
-      root.style.position = "relative";
-      root.style.width = "100%";
-      if (root.offsetHeight < window.innerHeight * 2) {
-        root.style.height = "10000vh";
+      if (root) {
+        root.style.setProperty("position", "absolute", "important");
+        root.style.setProperty("inset", "0", "important");
+        root.style.setProperty("width", "100%", "important");
+        root.style.setProperty("height", "100%", "important");
+        root.style.removeProperty("min-height");
+
+        var stage = root.querySelector(".fixed") || root.querySelector(":scope > div");
+        if (stage) {
+          stage.style.setProperty("position", "absolute", "important");
+          stage.style.setProperty("inset", "0", "important");
+          stage.style.setProperty("width", "100%", "important");
+          stage.style.setProperty("height", "100%", "important");
+          stage.style.setProperty("overflow", "hidden", "important");
+        }
       }
 
-      var fixed = root.querySelector(".fixed");
-      if (fixed) {
-        fixed.style.position = "fixed";
-        fixed.style.inset = "0";
-        fixed.style.width = "100%";
-        fixed.style.height = "100%";
-        fixed.style.overflow = "hidden";
-        fixed.style.zIndex = "0";
-      }
-
-      if (root.querySelector("canvas")) {
+      var canvas = wrap.querySelector("canvas");
+      if (canvas) {
+        canvas.style.setProperty("width", "100%", "important");
+        canvas.style.setProperty("height", "100%", "important");
+        canvas.style.setProperty("display", "block", "important");
+        wrap.classList.add("omama-typical-ready");
+        // Theme WS.handleResize listens to window resize.
         window.dispatchEvent(new Event("resize"));
+        return;
       }
+
+      ensureTypicalUnitFallback(wrap);
     });
+  }
+
+  function ensureTypicalUnitFallback(wrap) {
+    if (!wrap || wrap.querySelector("canvas") || wrap.querySelector(".omama-typical-fallback")) return;
+
+    var urls = [];
+    try {
+      urls = JSON.parse(wrap.getAttribute("data-image-urls") || "[]");
+    } catch (e) {
+      urls = [];
+    }
+    if (!urls.length) return;
+
+    var mosaic = document.createElement("div");
+    mosaic.className = "omama-typical-fallback";
+    mosaic.setAttribute("aria-hidden", "true");
+    urls.slice(0, 6).forEach(function (src) {
+      var img = document.createElement("img");
+      img.src = src;
+      img.alt = "";
+      img.loading = "lazy";
+      img.decoding = "async";
+      mosaic.appendChild(img);
+    });
+    wrap.appendChild(mosaic);
+  }
+
+  function watchTypicalUnitGallery() {
+    if (document.documentElement._omamaTypicalWatch) return;
+    document.documentElement._omamaTypicalWatch = true;
+
+    if (typeof MutationObserver !== "undefined") {
+      var obs = new MutationObserver(function () {
+        if (!document.querySelector("section.typical_unit .gallery-wrap")) return;
+        fixTypicalUnitGalleryDom();
+      });
+      obs.observe(document.body, { childList: true, subtree: true });
+    }
+
+    if (typeof ResizeObserver !== "undefined") {
+      document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
+        if (wrap._omamaTypicalRo) return;
+        wrap._omamaTypicalRo = true;
+        new ResizeObserver(function () {
+          if (wrap.querySelector("canvas")) window.dispatchEvent(new Event("resize"));
+        }).observe(wrap);
+      });
+    }
   }
 
   function scheduleTypicalUnitGalleryFix() {
     if (!document.querySelector("section.typical_unit .gallery-wrap")) return;
-    [0, 300, 800, 1600, 3200].forEach(function (delay) {
+    watchTypicalUnitGallery();
+    [0, 250, 800, 2000, 4000].forEach(function (delay) {
       window.setTimeout(fixTypicalUnitGalleryDom, delay);
     });
-  }
-
-  var homeLivingPinRebuildTimer = null;
-
-  function rebuildHomeLivingPinScroll() {
-    if (isMobileViewport()) return;
-
-    var livingTrack = document.querySelector("section.living .living-track");
-    var pinWrap = document.querySelector(".pin-wrap");
-    if (!livingTrack || !pinWrap || !window.gsap || !window.ScrollTrigger) return;
-
-    var left = livingTrack.getBoundingClientRect().left;
-    var distance = Math.max(0, livingTrack.scrollWidth - window.innerWidth + left + 25);
-    if (distance <= 0) return;
-
-    window.ScrollTrigger.getAll()
-      .slice()
-      .forEach(function (st) {
-        var trigger = st.trigger;
-        var node = typeof trigger === "string" ? document.querySelector(trigger) : trigger;
-        if (node && node.classList && node.classList.contains("pin-wrap")) {
-          try {
-            st.kill(true);
-          } catch (e) {}
-        }
-      });
-
-    window.gsap.set(livingTrack, { x: 0 });
-    window.gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: pinWrap,
-          start: "top top",
-          end: "+=" + (distance + 400),
-          scrub: true,
-          pin: true,
-        },
-      })
-      .to({}, { duration: 0, ease: "none" })
-      .to(livingTrack, { x: -distance, ease: "none", duration: distance })
-      .to({}, { duration: 0, ease: "none" });
-
-    try {
-      window.ScrollTrigger.refresh(true);
-    } catch (e) {}
-  }
-
-  function waitForLivingTrackImages(callback) {
-    var imgs = document.querySelectorAll("section.living .living-track img");
-    if (!imgs.length) {
-      callback();
-      return;
-    }
-
-    var pending = 0;
-    imgs.forEach(function (img) {
-      if (!img.complete) pending += 1;
-    });
-
-    if (!pending) {
-      callback();
-      return;
-    }
-
-    var done = false;
-    function finish() {
-      pending -= 1;
-      if (!done && pending <= 0) {
-        done = true;
-        callback();
-      }
-    }
-
-    imgs.forEach(function (img) {
-      if (!img.complete) {
-        img.addEventListener("load", finish, { once: true });
-        img.addEventListener("error", finish, { once: true });
-      }
-    });
-
-    window.setTimeout(function () {
-      if (!done) {
-        done = true;
-        callback();
-      }
-    }, 5000);
-  }
-
-  function scheduleHomeLivingDesktopScrollFix() {
-    if (isMobileViewport() || !document.querySelector("section.living .living-track")) return;
-
-    function queueRebuild() {
-      clearTimeout(homeLivingPinRebuildTimer);
-      homeLivingPinRebuildTimer = window.setTimeout(function () {
-        waitForLivingTrackImages(rebuildHomeLivingPinScroll);
-      }, 120);
-    }
-
-    [400, 1000, 2500, 5000].forEach(function (delay) {
-      window.setTimeout(queueRebuild, delay);
-    });
-
-    var track = document.querySelector("section.living .living-track");
-    if (track && !track._omamaLivingRo && typeof ResizeObserver !== "undefined") {
-      track._omamaLivingRo = true;
-      new ResizeObserver(function () {
-        if (isMobileViewport()) return;
-        queueRebuild();
-      }).observe(track);
-    }
-  }
-
-  function handleViewportScrollModeChange() {
-    if (isLivingPage() && isMobileViewport()) {
-      scheduleLivingMobileFix();
-      return;
-    }
-
-    document.documentElement.classList.remove("omama-living-mobile");
-    restoreHomeLivingSwiperDesktop();
-    scheduleThemeScrollRefresh();
-    scheduleTypicalUnitGalleryFix();
-
-    if (!isMobileViewport()) {
-      scheduleHomeLivingDesktopScrollFix();
-    }
   }
 
   function afterBarbaPage() {
@@ -3009,7 +3077,7 @@
     restoreHomeLivingSwiperDesktop();
     scheduleThemeScrollRefresh();
     scheduleTypicalUnitGalleryFix();
-    scheduleHomeLivingDesktopScrollFix();
+    scheduleHomeLivingPinCalibration();
   }
 
   function scheduleIgBootRetries() {
@@ -3241,14 +3309,12 @@
     restoreHomeLivingSwiperDesktop();
     scheduleThemeScrollRefresh();
     scheduleTypicalUnitGalleryFix();
-    scheduleHomeLivingDesktopScrollFix();
+    scheduleHomeLivingPinCalibration();
 
     window.addEventListener("load", function () {
-      handleViewportScrollModeChange();
-    });
-
-    window.addEventListener("resize", function () {
-      handleViewportScrollModeChange();
+      scheduleThemeScrollRefresh();
+      scheduleTypicalUnitGalleryFix();
+      scheduleHomeLivingPinCalibration();
     });
   }
 
