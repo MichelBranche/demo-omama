@@ -2879,11 +2879,11 @@
 
     var livingImgs = track.querySelectorAll(".image-wrap img.slow-anim, .image-wrap img.fast-anim");
     livingImgs.forEach(function (img) {
-      window.gsap.set(img, {
-        clearProps: "x,xPercent",
-        scale: 1.2,
-        transformOrigin: "center center",
-      });
+      // Keep the frame shape intact: no scale/translate on the img box.
+      window.gsap.set(img, { clearProps: "x,y,xPercent,yPercent,scale,transform" });
+      img.style.objectFit = "cover";
+      img.style.width = "100%";
+      img.style.height = "100%";
     });
 
     // One shared ScrollTrigger: track travel + image parallax stay 1:1 with scroll.
@@ -2906,10 +2906,21 @@
 
     livingImgs.forEach(function (img) {
       var isSlow = img.classList.contains("slow-anim");
-      // Opposite direction to the track so the photo "lags" inside its frame.
-      var from = isSlow ? -7 : -14;
-      var to = isSlow ? 7 : 14;
-      tl.fromTo(img, { xPercent: from }, { xPercent: to, ease: "none" }, 0);
+      var from = isSlow ? 42 : 28;
+      var to = isSlow ? 58 : 72;
+      var proxy = { x: from };
+      img.style.objectPosition = from + "% 50%";
+      tl.to(
+        proxy,
+        {
+          x: to,
+          ease: "none",
+          onUpdate: function () {
+            img.style.objectPosition = proxy.x + "% 50%";
+          },
+        },
+        0
+      );
     });
 
     pinWrap._omamaLivingPinDistance = distance;
@@ -3116,68 +3127,62 @@
     if (prefersReducedMotion()) return;
 
     omamaParallaxCtx = window.gsap.context(function () {
-      // Living desktop parallax lives inside calibrateHomeLivingPin's timeline
-      // so it stays locked to the horizontal pin scroll. Mobile only here.
+      function scrubObjectPosition(img, trigger, fromX, toX, fromY, toY) {
+        window.gsap.set(img, { clearProps: "x,y,xPercent,yPercent,scale,transform" });
+        img.style.objectFit = "cover";
+        img.style.width = "100%";
+        img.style.height = "100%";
+        var proxy = { x: fromX, y: fromY };
+        img.style.objectPosition = fromX + "% " + fromY + "%";
+        window.gsap.to(proxy, {
+          x: toX,
+          y: toY,
+          ease: "none",
+          scrollTrigger: {
+            trigger: trigger,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+          onUpdate: function () {
+            img.style.objectPosition = proxy.x + "% " + proxy.y + "%";
+          },
+        });
+      }
+
+      // Living desktop parallax lives inside calibrateHomeLivingPin's timeline.
       if (isMobileViewport()) {
         document
           .querySelectorAll(
             "section.living .living-track .image-wrap img.slow-anim, section.living .living-track .image-wrap img.fast-anim"
           )
           .forEach(function (img) {
-            window.gsap.set(img, { scale: 1.12, transformOrigin: "center center" });
-            window.gsap.fromTo(
-              img,
-              { yPercent: -8 },
-              {
-                yPercent: 8,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: img.closest(".item") || img,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: true,
-                },
-              }
-            );
+            scrubObjectPosition(img, img.closest(".item") || img, 50, 50, 35, 65);
           });
       }
 
       document.querySelectorAll("section.community .image-wrap img").forEach(function (img, index) {
         var frame = img.closest(".image-wrap");
         if (frame) frame.classList.add("omama-parallax-host");
-        window.gsap.set(img, { scale: 1.16, transformOrigin: "center center" });
-        window.gsap.fromTo(
+        scrubObjectPosition(
           img,
-          { yPercent: index % 2 === 0 ? -10 : -6 },
-          {
-            yPercent: index % 2 === 0 ? 10 : 6,
-            ease: "none",
-            scrollTrigger: {
-              trigger: frame || img,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
+          frame || img,
+          index % 2 === 0 ? 45 : 55,
+          index % 2 === 0 ? 55 : 45,
+          30,
+          70
         );
       });
 
       document.querySelectorAll(".omama-aosta-photo").forEach(function (img, index) {
         ensureParallaxFrame(img, "omama-aosta-photo-frame");
-        window.gsap.set(img, { scale: 1.18, transformOrigin: "center center" });
-        window.gsap.fromTo(
+        scrubObjectPosition(
           img,
-          { yPercent: index === 1 ? -12 : -7 },
-          {
-            yPercent: index === 1 ? 12 : 7,
-            ease: "none",
-            scrollTrigger: {
-              trigger: img.parentElement || img,
-              start: "top bottom",
-              end: "bottom top",
-              scrub: true,
-            },
-          }
+          img.parentElement || img,
+          50,
+          50,
+          index === 1 ? 28 : 38,
+          index === 1 ? 72 : 62
         );
       });
     });

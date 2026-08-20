@@ -1836,11 +1836,23 @@ header .header-wrap .open-modal-btn.button.background-purple-dark.js-color-butto
   width: 100%;
 }
 
-/* Soft parallax hosts — keep overflow clipped while images scale/drift */
+/* Soft parallax hosts — crop shifts via object-position; frames keep their shape */
+section.living .living-track .item-list .item .image-wrap,
+section.community .image-wrap,
+.omama-aosta-photo-frame {
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
 section.living .living-track .item-list .item .image-wrap img,
 section.community .image-wrap img,
 .omama-aosta-photo-frame img {
-  will-change: transform;
+  display: block;
+  height: 100%;
+  object-fit: cover;
+  transform: none !important;
+  width: 100%;
 }
 
 .omama-cta360-img {
@@ -1849,9 +1861,6 @@ section.community .image-wrap img,
 }
 
 @media (prefers-reduced-motion: reduce) {
-  section.living .living-track .item-list .item .image-wrap img,
-  section.community .image-wrap img,
-  .omama-aosta-photo-frame img,
   .omama-cta360-img {
     transform: none !important;
     will-change: auto;
