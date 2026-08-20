@@ -2980,86 +2980,47 @@
     return ok;
   }
 
-  function canvasIsLive(canvas) {
-    if (!canvas || canvas.width < 4 || canvas.height < 4) return false;
-    try {
-      var gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
-      return !!gl && !gl.isContextLost();
-    } catch (e) {
-      return false;
-    }
-  }
-
   function fixTypicalUnitGalleryDom() {
     document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
-      ensureTypicalUnitFallback(wrap);
+      // Drop leftover photo mosaics from earlier builds / cached HTML.
+      wrap.querySelectorAll(".omama-typical-fallback").forEach(function (node) {
+        node.remove();
+      });
 
-      if (!webglAvailable()) {
-        wrap.classList.remove("omama-typical-ready");
-        return;
-      }
+      if (!webglAvailable()) return;
 
       // Theme mounts the tunnel with Tailwind-only classes; give it real box sizes
       // so renderer.setSize() gets non-zero dimensions instead of collapsing.
       var root = wrap.querySelector(":scope > .relative") || wrap.querySelector(":scope > div");
-      if (root) {
-        root.style.setProperty("position", "absolute", "important");
-        root.style.setProperty("inset", "0", "important");
-        root.style.setProperty("width", "100%", "important");
-        root.style.setProperty("height", "100%", "important");
+      if (!root) return;
 
-        var stage = root.querySelector(".fixed") || root.querySelector(":scope > div");
-        if (stage) {
-          stage.style.setProperty("position", "absolute", "important");
-          stage.style.setProperty("inset", "0", "important");
-          stage.style.setProperty("width", "100%", "important");
-          stage.style.setProperty("height", "100%", "important");
-          stage.style.setProperty("overflow", "hidden", "important");
-        }
+      root.style.setProperty("position", "absolute", "important");
+      root.style.setProperty("inset", "0", "important");
+      root.style.setProperty("width", "100%", "important");
+      root.style.setProperty("height", "100%", "important");
+
+      var stage = root.querySelector(".fixed") || root.querySelector(":scope > div");
+      if (stage) {
+        stage.style.setProperty("position", "absolute", "important");
+        stage.style.setProperty("inset", "0", "important");
+        stage.style.setProperty("width", "100%", "important");
+        stage.style.setProperty("height", "100%", "important");
+        stage.style.setProperty("overflow", "hidden", "important");
       }
 
       var canvas = wrap.querySelector("canvas");
-      if (!canvas) {
-        wrap.classList.remove("omama-typical-ready");
-        return;
-      }
+      if (!canvas) return;
 
       canvas.style.setProperty("display", "block", "important");
       canvas.style.setProperty("width", "100%", "important");
       canvas.style.setProperty("height", "100%", "important");
 
-      // Theme WS.handleResize reads mountElement.clientWidth/Height on window resize.
-      if (wrap.clientWidth > 0 && wrap.clientHeight > 0) {
+      // Theme WS.handleResize reads mountElement.clientWidth/Height on window resize,
+      // which is what repairs a renderer that was sized before layout settled.
+      if (wrap.clientWidth > 0 && wrap.clientHeight > 0 && canvas.width < wrap.clientWidth) {
         window.dispatchEvent(new Event("resize"));
       }
-
-      wrap.classList.toggle("omama-typical-ready", canvasIsLive(canvas));
     });
-  }
-
-  function ensureTypicalUnitFallback(wrap) {
-    if (!wrap || wrap.querySelector(".omama-typical-fallback")) return;
-
-    var urls = [];
-    try {
-      urls = JSON.parse(wrap.getAttribute("data-image-urls") || "[]");
-    } catch (e) {
-      urls = [];
-    }
-    if (!urls.length) return;
-
-    var mosaic = document.createElement("div");
-    mosaic.className = "omama-typical-fallback";
-    mosaic.setAttribute("aria-hidden", "true");
-    urls.slice(0, 6).forEach(function (src) {
-      var img = document.createElement("img");
-      img.src = src;
-      img.alt = "";
-      img.loading = "lazy";
-      img.decoding = "async";
-      mosaic.appendChild(img);
-    });
-    wrap.appendChild(mosaic);
   }
 
   function watchTypicalUnitGallery() {

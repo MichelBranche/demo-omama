@@ -1170,28 +1170,8 @@ section.typical_unit .gallery-wrap .press-cursor {
   display: none !important;
 }
 
-/* Photo mosaic: shown until the WebGL tunnel is confirmed to be drawing, and
-   left in place permanently when WebGL is unavailable. */
 section.typical_unit .gallery-wrap .omama-typical-fallback {
-  display: grid;
-  gap: 4px;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  height: 100%;
-  inset: 0;
-  position: absolute;
-  width: 100%;
-  z-index: 1;
-}
-
-section.typical_unit .gallery-wrap .omama-typical-fallback img {
-  height: 100%;
-  object-fit: cover;
-  width: 100%;
-}
-
-section.typical_unit .gallery-wrap.omama-typical-ready .omama-typical-fallback {
-  display: none;
+  display: none !important;
 }
 
 @media only screen and (min-width: 1024px) {
