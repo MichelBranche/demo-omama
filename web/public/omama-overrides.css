@@ -1188,7 +1188,8 @@ section.typical_unit .gallery-wrap .omama-typical-fallback img {
   width: 100%;
 }
 
-section.typical_unit .gallery-wrap:has(canvas) .omama-typical-fallback {
+/* Hide mosaic only when the 3D canvas is actually drawing (non-zero size). */
+section.typical_unit .gallery-wrap.omama-typical-ready .omama-typical-fallback {
   display: none;
 }
 

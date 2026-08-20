@@ -2996,8 +2996,10 @@
         canvas.style.setProperty("width", "100%", "important");
         canvas.style.setProperty("height", "100%", "important");
         canvas.style.setProperty("display", "block", "important");
-        wrap.classList.add("omama-typical-ready");
-        // Theme WS.handleResize listens to window resize.
+        // Only hide mosaic when canvas has a real drawing buffer.
+        if (canvas.width > 2 && canvas.height > 2) {
+          wrap.classList.add("omama-typical-ready");
+        }
         window.dispatchEvent(new Event("resize"));
         return;
       }
