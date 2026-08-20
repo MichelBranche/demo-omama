@@ -2967,20 +2967,73 @@
     });
   }
 
+  function webglAvailable() {
+    if (typeof document._omamaWebgl === "boolean") return document._omamaWebgl;
+    var ok = false;
+    try {
+      var probe = document.createElement("canvas");
+      ok = !!(probe.getContext("webgl2") || probe.getContext("webgl") || probe.getContext("experimental-webgl"));
+    } catch (e) {
+      ok = false;
+    }
+    document._omamaWebgl = ok;
+    return ok;
+  }
+
+  function canvasIsLive(canvas) {
+    if (!canvas || canvas.width < 4 || canvas.height < 4) return false;
+    try {
+      var gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+      return !!gl && !gl.isContextLost();
+    } catch (e) {
+      return false;
+    }
+  }
+
   function fixTypicalUnitGalleryDom() {
     document.querySelectorAll("section.typical_unit .gallery-wrap").forEach(function (wrap) {
       ensureTypicalUnitFallback(wrap);
 
-      // Remove theme WebGL tunnel: on deploy it often mounts empty and covers the mosaic.
-      wrap.querySelectorAll("canvas").forEach(function (canvas) {
-        var root = canvas.closest(".relative") || canvas.parentElement;
-        try {
-          if (root && root.parentElement === wrap) root.remove();
-          else canvas.remove();
-        } catch (e) {}
-      });
+      if (!webglAvailable()) {
+        wrap.classList.remove("omama-typical-ready");
+        return;
+      }
 
-      wrap.classList.remove("omama-typical-ready");
+      // Theme mounts the tunnel with Tailwind-only classes; give it real box sizes
+      // so renderer.setSize() gets non-zero dimensions instead of collapsing.
+      var root = wrap.querySelector(":scope > .relative") || wrap.querySelector(":scope > div");
+      if (root) {
+        root.style.setProperty("position", "absolute", "important");
+        root.style.setProperty("inset", "0", "important");
+        root.style.setProperty("width", "100%", "important");
+        root.style.setProperty("height", "100%", "important");
+
+        var stage = root.querySelector(".fixed") || root.querySelector(":scope > div");
+        if (stage) {
+          stage.style.setProperty("position", "absolute", "important");
+          stage.style.setProperty("inset", "0", "important");
+          stage.style.setProperty("width", "100%", "important");
+          stage.style.setProperty("height", "100%", "important");
+          stage.style.setProperty("overflow", "hidden", "important");
+        }
+      }
+
+      var canvas = wrap.querySelector("canvas");
+      if (!canvas) {
+        wrap.classList.remove("omama-typical-ready");
+        return;
+      }
+
+      canvas.style.setProperty("display", "block", "important");
+      canvas.style.setProperty("width", "100%", "important");
+      canvas.style.setProperty("height", "100%", "important");
+
+      // Theme WS.handleResize reads mountElement.clientWidth/Height on window resize.
+      if (wrap.clientWidth > 0 && wrap.clientHeight > 0) {
+        window.dispatchEvent(new Event("resize"));
+      }
+
+      wrap.classList.toggle("omama-typical-ready", canvasIsLive(canvas));
     });
   }
 
@@ -3035,7 +3088,7 @@
   function scheduleTypicalUnitGalleryFix() {
     if (!document.querySelector("section.typical_unit .gallery-wrap")) return;
     watchTypicalUnitGallery();
-    [0, 250, 800, 2000, 4000].forEach(function (delay) {
+    [0, 250, 800, 2000, 4000, 7000].forEach(function (delay) {
       window.setTimeout(fixTypicalUnitGalleryDom, delay);
     });
   }
