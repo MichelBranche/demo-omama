@@ -136,8 +136,12 @@ for (const page of Object.keys(PAGES)) {
     if (wrongLang.length > allowedCrossLinks) fail(where, `${wrongLang.length} link verso un'altra lingua`);
 
     // Leftovers from the traced theme
+    const headHtml = $("head").html() || "";
     for (const needle of LEFTOVERS) {
-      if ($("head").html().includes(needle)) fail(where, `residuo nel <head>: ${needle}`);
+      if (headHtml.includes(needle)) fail(where, `residuo nel <head>: ${needle}`);
+    }
+    if (!headHtml.includes("window.vaq") || !headHtml.includes('src="/_vercel/insights/script.js"')) {
+      fail(where, "snippet Vercel Web Analytics mancante");
     }
 
     // Language switcher
