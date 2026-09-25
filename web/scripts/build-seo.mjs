@@ -310,7 +310,13 @@ function buildPage(page, lang, master, translator) {
 
   const outDir = join(PUBLIC_DIR, lang, PAGE_PATHS[page]);
   mkdirSync(outDir, { recursive: true });
-  writeFileSync(join(outDir, "index.html"), `<!DOCTYPE html>\n${$.html("html")}\n`, "utf8");
+  // Cheerio serializes the boolean `defer` as `defer=""`. Keep the standard
+  // Vercel snippet (`<script defer src="...">`) byte-for-byte.
+  const html = `<!DOCTYPE html>\n${$.html("html")}\n`.replace(
+    '<script defer="" src="/_vercel/insights/script.js"></script>',
+    '<script defer src="/_vercel/insights/script.js"></script>'
+  );
+  writeFileSync(join(outDir, "index.html"), html, "utf8");
 
   return { headings, images, faqs: faqs.length };
 }

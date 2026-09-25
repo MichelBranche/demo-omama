@@ -115,6 +115,15 @@ export function buildHead($, { page, lang, meta, config, graph }) {
   add("<noscript><style>body{opacity:1 !important}</style></noscript>");
 
   add("");
+  // These files are what the site actually serves (see rewrites in
+  // next.config.ts). The Next.js <Analytics /> tag never renders here, so the
+  // Vercel Web Analytics snippet has to be written into every page head.
+  add(
+    "<script>window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };</script>"
+  );
+  add('<script defer src="/_vercel/insights/script.js"></script>');
+
+  add("");
   add(`<script type="application/ld+json">${JSON.stringify(graph)}</script>`);
 
   return lines.join("\n");

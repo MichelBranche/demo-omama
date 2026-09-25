@@ -8,11 +8,18 @@ import { SITE, PAGE_PATHS } from "./seo/site.mjs";
 const ROOT = join(import.meta.dirname, "..");
 let failures = 0;
 
+// Injected by the generator on every page; not part of the master documents.
+function isVercelAnalyticsScript($, el) {
+  const src = $(el).attr("src") || "";
+  if (src === "/_vercel/insights/script.js") return true;
+  return ($(el).html() || "").includes("window.vaq");
+}
+
 function summarise($) {
   return {
     styles: $("head style").length,
     stylesheets: $('head link[rel="stylesheet"]').length,
-    headScripts: $("head script").length,
+    headScripts: $("head script").filter((i, el) => !isVercelAnalyticsScript($, el)).length,
     bodyScripts: $("body script").length,
     // The curated Instagram wall is generated, not traced from the master, so
     // it is excluded to keep this a like-for-like comparison.
@@ -44,6 +51,11 @@ for (const [page, slug] of Object.entries(PAGE_PATHS)) {
     // The head loses the two ld+json/tracker scripts on purpose.
     const scriptDelta = expected.headScripts - actual.headScripts;
     if (scriptDelta < 0 || scriptDelta > 2) diffs.push(`headScripts: ${expected.headScripts} -> ${actual.headScripts}`);
+
+    const head = $("head").html() || "";
+    if (!head.includes("window.vaq") || !head.includes('src="/_vercel/insights/script.js"')) {
+      diffs.push("snippet Vercel Web Analytics mancante");
+    }
 
     if (diffs.length) {
       failures += 1;
