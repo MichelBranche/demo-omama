@@ -1196,8 +1196,14 @@
 
     if (map.zoomControl) map.zoomControl.setPosition(isFull ? "topright" : "bottomright");
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    // OpenStreetMap standard tiles: free, no API key, attribution required.
+    // A CSS filter on .omama-tiles tones them down to the site's cream palette.
+    L.control.attribution({ position: "bottomright", prefix: false }).addTo(map);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
+      className: "omama-tiles",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
     }).addTo(map);
 
     var centroLayer = null;
